@@ -3,6 +3,8 @@ plugins {
 }
 
 subprojects {
+    apply(plugin = "maven-publish")
+
     repositories {
         mavenCentral()
     }
