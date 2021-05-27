@@ -1,5 +1,7 @@
 # kenet
 
+![CI](https://github.com/kotlin-everywhere/kenet/actions/workflows/gradle.yml/badge.svg)
+
 Kotlin Everywhere Network
 
 # 코딩 컨벤션
