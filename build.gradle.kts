@@ -2,9 +2,7 @@ plugins {
     `maven-publish`
 }
 
-subprojects {
-    apply(plugin = "maven-publish")
-
+allprojects {
     repositories {
         mavenCentral()
     }
