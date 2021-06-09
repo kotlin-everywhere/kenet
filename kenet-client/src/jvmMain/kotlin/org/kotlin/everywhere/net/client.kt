@@ -6,6 +6,7 @@ import io.ktor.client.features.json.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.serialization.json.Json
 
 actual class Client actual constructor() : KenetClient {
     @PublishedApi
@@ -18,9 +19,10 @@ actual class Client actual constructor() : KenetClient {
     }
 
     actual suspend inline fun <P : Any, reified R : Any> call(call: Call<P, R>, parameter: P): R {
-        return client.post("http://localhost:5000/kenet") {
+        val response = client.post<Response>("http://localhost:5000/kenet") {
             contentType(ContentType.Application.Json)
-            body = parameter
+            body = Request(call.name, Json.encodeToString(call.parameterSerializer, parameter))
         }
+        return Json.decodeFromString(call.responseSerializer, response.responseJson)
     }
 }

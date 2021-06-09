@@ -23,8 +23,10 @@ class EchoTest {
         }
 
         val server = Server(Api())
+        server.kenet.echo.invoke(handler = { msg -> msg })
         val serverJob = launch { server.launch(5000) }
 
+        // TODO :: server.launch API 변경후 delay 삭제
         delay(1000)
         val client = Api().apply { client = Client() }
         val returnedMessage = client.echo("hello, world!")

@@ -1,5 +1,6 @@
 plugins {
-    kotlin("multiplatform") version "1.5.10"
+    kotlin("multiplatform")
+    kotlin("plugin.serialization")
     `maven-publish`
 }
 
@@ -11,7 +12,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-                implementation("io.github.aakira:napier:1.5.0")
+                api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
             }
         }
 

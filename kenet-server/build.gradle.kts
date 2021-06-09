@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.5.10"
+    kotlin("multiplatform")
     `maven-publish`
 }
 
@@ -14,6 +14,14 @@ kotlin {
                 val ktor_version = "1.6.0"
                 implementation("io.ktor:ktor-server-netty:$ktor_version")
                 implementation("io.ktor:ktor-serialization:$ktor_version")
+            }
+        }
+
+        @Suppress("UNUSED_VARIABLE")
+        val jvmMain by getting {
+            dependencies {
+                api(project(":kenet-dsl"))
+                implementation("ch.qos.logback:logback-classic:1.2.3")
             }
         }
 
