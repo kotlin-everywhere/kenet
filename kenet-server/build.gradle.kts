@@ -12,7 +12,7 @@ kotlin {
             dependencies {
                 api(project(":kenet-dsl"))
                 val ktor_version = "1.6.0"
-                implementation("io.ktor:ktor-server-netty:$ktor_version")
+                implementation("io.ktor:ktor-server-cio:$ktor_version")
                 implementation("io.ktor:ktor-serialization:$ktor_version")
             }
         }

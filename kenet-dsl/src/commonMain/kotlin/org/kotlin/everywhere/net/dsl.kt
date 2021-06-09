@@ -18,7 +18,7 @@ abstract class Kenet {
     @PublishedApi
     internal fun <P : Any, R : Any> call(
         parameterSerializer: KSerializer<P>,
-        responseSerializer: KSerializer<R>,
+        responseSerializer: KSerializer<R>
     ): ReadOnlyProperty<Kenet, Call<P, R>> = createEndpointProperty { index, anonymousName ->
         Call(this, index, false, anonymousName, parameterSerializer, responseSerializer)
     }
@@ -55,7 +55,11 @@ sealed class Endpoint<P : Any>(
 )
 
 class Call<P : Any, R : Any>(
-    kenet: Kenet, index: Int, initialized: Boolean, name: String, parameterSerializer: KSerializer<P>,
+    kenet: Kenet,
+    index: Int,
+    initialized: Boolean,
+    name: String,
+    parameterSerializer: KSerializer<P>,
     val responseSerializer: KSerializer<R>
 ) : Endpoint<P>(kenet, index, initialized, name, parameterSerializer) {
     var handler: (P) -> R =
