@@ -22,14 +22,19 @@ class EchoTest {
             val echo by c<String, String>()
         }
 
-        val server = Server(Api())
-        server.kenet.echo.invoke(handler = { msg -> msg })
-        val serverJob = launch { server.launch(5000) }
+        fun Api.init() {
+            echo(handler = { it })
+        }
 
-        // TODO :: server.launch API 변경후 delay 삭제
+        val api = Api().apply { init() }
+        val server = createServer(api)
+
+        // TODO :: server.launch API 변경후 delay & launch 삭제
+        val serverJob = launch { server.launch(5000) }
         delay(1000)
-        val client = Api().apply { client = Client() }
-        val returnedMessage = client.echo("hello, world!")
+
+        val client = createClient(api)
+        val returnedMessage = client.kenet.echo("hello, world!")
         assertEquals("hello, world!", returnedMessage)
 
         serverJob.cancelAndJoin()

@@ -8,7 +8,7 @@ import kotlin.properties.ReadOnlyProperty
 abstract class Kenet {
     val _endpoints = mutableListOf<Endpoint<*>>()
 
-    var client: KenetClient? = null
+    var _client: KenetClient? = null
 
     /**
      * 최초 생성시 이름 지정용 인덱스, 그냥 이름 자리에 null 이 들어가는게 싫다.

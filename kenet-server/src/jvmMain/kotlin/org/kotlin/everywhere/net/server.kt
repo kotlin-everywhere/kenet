@@ -13,7 +13,7 @@ import kotlinx.coroutines.CompletableDeferred
 
 actual class Server<T : Kenet> actual constructor(kenet: T) : CommonSever<T>(kenet) {
     actual suspend fun launch(port: Int) {
-        val es = embeddedServer(CIO, port = port) {
+        val es = embeddedServer(CIO, port = port, watchPaths = listOf()) {
             install(ContentNegotiation) {
                 json()
             }

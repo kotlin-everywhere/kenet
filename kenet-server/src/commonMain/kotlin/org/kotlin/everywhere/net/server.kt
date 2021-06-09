@@ -15,3 +15,7 @@ operator fun <P : Any, R : Any> Call<P, R>.invoke(handler: (P) -> R) {
 fun <P : Any, R : Any> Call<P, R>.handle(parameterJson: String): String {
     return Json.encodeToString(responseSerializer, handler(Json.decodeFromString(parameterSerializer, parameterJson)))
 }
+
+fun createServer(api: Kenet): Server<*> {
+    return Server(api)
+}

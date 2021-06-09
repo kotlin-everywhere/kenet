@@ -10,16 +10,18 @@ class DslTest {
     @Test
     fun testCompile() {
         class Api : Kenet() {
+            // 동일 이름 사용 가능 여부 확인, Kenet 사용 중인 프로퍼티 명과 충돌하는지 테스트
             val call by c<Unit, Unit>()
 
-            // 동일 이름 사용 가능 여부 확인, Kenet 사용 중인 프로퍼티 명과 충돌하는지 테스트
-            val endpoints by c<Unit, String>()
+            // 동일 이름 사용 가능 여부 확인, Kenet 사용 중인 함수명과 충돌하는지 테스트
+            val anonymousEndpointIndex by c<Unit, String>()
         }
 
         val api = Api()
         assertIs<Kenet>(api, "Kenet Protocol 정의 객체")
         assertIs<Call<*, *>>(api.call, "Call 호출 지점")
-        assertEquals("endpoints", api.endpoints.name, "동일한 프로퍼티명 겹치지 않고 호출되는지 확인")
+        assertEquals("call", api.call.name, "동일한 프로퍼티명 겹치지 않고 호출되는지 확인")
+        assertEquals("anonymousEndpointIndex", api.anonymousEndpointIndex.name, "동일한 함수명이 겹치지 않고 호출되는지 확인")
     }
 
     /**

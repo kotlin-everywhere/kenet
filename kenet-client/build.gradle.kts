@@ -26,5 +26,12 @@ kotlin {
                 implementation("ch.qos.logback:logback-classic:1.2.3")
             }
         }
+
+        @Suppress("UNUSED_VARIABLE")
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
     }
 }
