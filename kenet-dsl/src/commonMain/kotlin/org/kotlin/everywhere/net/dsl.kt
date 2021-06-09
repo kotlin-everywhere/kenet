@@ -16,12 +16,6 @@ abstract class Kenet {
     private var anonymousEndpointIndex = 0
 
     @PublishedApi
-    internal fun <P : Any> fire(parameterSerializer: KSerializer<P>): ReadOnlyProperty<Kenet, Fire<P>> =
-        createEndpointProperty { index, anonymousName ->
-            Fire(this, index, false, anonymousName, parameterSerializer)
-        }
-
-    @PublishedApi
     internal fun <P : Any, R : Any> call(
         parameterSerializer: KSerializer<P>,
         responseSerializer: KSerializer<R>,
@@ -48,10 +42,6 @@ abstract class Kenet {
     }
 }
 
-inline fun <reified P : Any> Kenet.f(): ReadOnlyProperty<Kenet, Fire<P>> {
-    return fire(serializer())
-}
-
 inline fun <reified P : Any, reified R : Any> Kenet.c(): ReadOnlyProperty<Kenet, Call<P, R>> {
     return call(serializer(), serializer())
 }
@@ -63,9 +53,6 @@ sealed class Endpoint<P : Any>(
     var name: String,
     val parameterSerializer: KSerializer<P>
 )
-
-class Fire<P : Any>(kenet: Kenet, index: Int, initialized: Boolean, name: String, parameterSerializer: KSerializer<P>) :
-    Endpoint<P>(kenet, index, initialized, name, parameterSerializer)
 
 class Call<P : Any, R : Any>(
     kenet: Kenet, index: Int, initialized: Boolean, name: String, parameterSerializer: KSerializer<P>,
