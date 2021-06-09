@@ -10,7 +10,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":kenet-client"))
-                implementation(project(":kenet-server"))
+                implementation(project(":kenet-server-engine-http"))
             }
         }
 

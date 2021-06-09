@@ -1,2 +1,4 @@
-include(":kenet-dsl", ":kenet-engine-http", ":kenet-server", ":kenet-client")
+include(":kenet-dsl")
+include(":kenet-server", ":kenet-server-engine-http")
+include(":kenet-client")
 include(":test-integration")

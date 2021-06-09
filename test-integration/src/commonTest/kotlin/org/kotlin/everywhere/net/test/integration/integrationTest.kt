@@ -27,7 +27,7 @@ class EchoTest {
         }
 
         val api = Api().apply { init() }
-        val server = createServer(api)
+        val server = createServer(api, HttpEngine())
 
         // TODO :: server.launch API 변경후 delay & launch 삭제
         val serverJob = launch { server.launch(5000) }

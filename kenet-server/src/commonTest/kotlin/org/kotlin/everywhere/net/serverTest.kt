@@ -14,7 +14,8 @@ class SeverTest {
             echo { it }
         }
 
-        val server = createServer(Api().apply { init() })
-        assertIs<Server<*>>(server, "서버를 생성하면 서버가 생성된다.")
+        val api = Api().apply { init() }
+        val server = createServer(api, TestEngine())
+        assertIs<Server>(server, "서버를 생성하면 서버가 생성된다.")
     }
 }
