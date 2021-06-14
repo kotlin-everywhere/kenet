@@ -29,6 +29,11 @@ echo "* /proc/meminfo" >>result.txt
 tee -a result.txt </proc/meminfo || echo "N/A" >>result.txt
 echo "" >>result.txt
 
+./benchmark-1-server-launch-time/build/install/benchmark-1-server-launch-time/bin/benchmark-1-server-launch-time &
+sleep 0.5
+./quit/build/install/quit/bin/quit
+sleep 1
+
 ./benchmark-2-memory-usage/build/install/benchmark-2-memory-usage/bin/benchmark-2-memory-usage &
 sleep 0.5
 ./quit/build/install/quit/bin/quit

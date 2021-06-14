@@ -9,6 +9,10 @@ die() {
 
 cd "$(dirname "$0")"
 
+RESULT_1_SERVER_LAUNCH_TIME="$(cat result-1-server-launch-time.txt)"
+if [ "$RESULT_1_SERVER_LAUNCH_TIME" -ge 1000 ]; then
+  die "overflow launch time : launch-time = $RESULT_1_SERVER_LAUNCH_TIME"
+fi
 RESULT_2_MEMORY_USAGE="$(cat result-2-memory-usage.txt)"
 if [ "$RESULT_2_MEMORY_USAGE" -ge 5242880 ]; then
   die "overflow memory usage : memory-usage = $RESULT_2_MEMORY_USAGE"
