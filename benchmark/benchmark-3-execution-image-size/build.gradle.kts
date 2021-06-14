@@ -19,5 +19,4 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
-    applicationDefaultJvmArgs = listOf("-Xmx7m")
 }
