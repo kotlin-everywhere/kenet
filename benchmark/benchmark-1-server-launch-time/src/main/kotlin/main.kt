@@ -3,8 +3,6 @@ import org.kotlin.everywhere.net.HttpEngine
 import org.kotlin.everywhere.net.createServer
 import org.kotlin.everywhere.net.invoke
 
-private class TargetForJarPath
-
 fun Api.init(quitDeferred: CompletableDeferred<Unit>, serverStartedAt: Milliseconds) {
     benchmark {
         val launchedAt = Milliseconds(System.currentTimeMillis())
