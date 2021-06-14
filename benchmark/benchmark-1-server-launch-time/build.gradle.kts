@@ -18,4 +18,5 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+    applicationDefaultJvmArgs = listOf("-XX:+AlwaysPreTouch", "-XX:TieredStopAtLevel=1")
 }
