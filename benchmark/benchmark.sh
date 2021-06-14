@@ -17,6 +17,9 @@ rm -f result-*.txt
 
 date >>result.txt
 
+echo "* gradle & java" >>result.txt
+../gradlew --version | tee -a result.txt
+
 echo "* /proc/version" >>result.txt
 tee -a result.txt </proc/version || echo "N/A" >>result.txt
 echo "" >>result.txt
