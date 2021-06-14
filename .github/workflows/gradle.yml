@@ -24,7 +24,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build installShadowDist
+      run: ./gradlew build installDist installShadowDist
     - name: Bachmark
       run: cd benchmark && ./benchmark.sh
     - name: Archive Result
