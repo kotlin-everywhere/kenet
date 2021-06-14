@@ -4,9 +4,19 @@ import org.kotlin.everywhere.net.createClient
 import org.kotlin.everywhere.net.invoke
 
 fun main() = runBlocking {
-    delay(200) // 서버 실행까지 대기
-
     val client = createClient(Api())
-    client.kenet.benchmark(Unit)
+    val startedAt = System.currentTimeMillis()
+    while (true) {
+        try {
+            client.kenet.benchmark(Unit)
+            break
+        } catch (e: Exception) {
+            val elapsed = System.currentTimeMillis() - startedAt
+            if (elapsed >= 2_000) {
+                throw e
+            }
+            delay(50)
+        }
+    }
     client.kenet.quit(Unit)
 }
