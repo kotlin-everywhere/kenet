@@ -11,9 +11,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
@@ -25,6 +23,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build installDist installShadowDist
+  benchmark:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: Benchmark
       run: ./benchmark/benchmark.sh
     - name: Archive Result
