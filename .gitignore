@@ -4,3 +4,6 @@ build/
 
 #intellij
 .idea
+
+#benchmark results
+benchmark/result*.txt
