@@ -18,4 +18,6 @@ fun log(vararg messages: String) {
     logToResultFile(messages)
 }
 
+expect fun logResult(target: String, value: Long)
+
 expect fun logToResultFile(messages: Array<out String>)

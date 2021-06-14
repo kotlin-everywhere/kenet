@@ -5,13 +5,15 @@ import org.kotlin.everywhere.net.invoke
 
 fun Api.init(quitDeferred: CompletableDeferred<Unit>) {
     benchmark {
+        val usedMemory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()
         log(
             "2. memory-usage",
             "total memory: ${Runtime.getRuntime().totalMemory().toMb()}",
             "max memory: ${Runtime.getRuntime().maxMemory().toMb()}",
             "free memory: ${Runtime.getRuntime().freeMemory().toMb()}",
-            "used memory: ${(Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()).toMb()}",
+            "used memory: ${usedMemory.toMb()}",
         )
+        logResult("2-memory-usage", usedMemory)
     }
     quit.invoke {
         GlobalScope.launch {

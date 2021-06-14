@@ -12,3 +12,7 @@ actual fun logToResultFile(messages: Array<out String>) {
         }
     }
 }
+
+actual fun logResult(target: String, value: Long) {
+    File("result-$target.txt").writeText(value.toString())
+}

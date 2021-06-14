@@ -9,12 +9,15 @@ private class TargetForJarPath
 fun Api.init(quitDeferred: CompletableDeferred<Unit>) {
     benchmark {
         val imageFile = TargetForJarPath::class.java.protectionDomain.codeSource.location.toURI().let(::File)
+        val imageSize = imageFile.length()
 
         log(
             "3. execution-image-size",
-            "imagePath : ${imageFile.absolutePath}",
-            "imageSize :  ${imageFile.length().toMb()}",
+            "imagePath: ${imageFile.absolutePath}",
+            "imageSize:  ${imageSize.toMb()}",
         )
+
+        logResult("3-execution-image-size", imageSize)
     }
     quit.invoke {
         GlobalScope.launch {
