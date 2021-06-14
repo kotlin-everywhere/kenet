@@ -33,7 +33,7 @@ tee -a result.txt </proc/meminfo || echo "N/A" >>result.txt
 echo "" >>result.txt
 
 ./benchmark-1-server-launch-time/build/install/benchmark-1-server-launch-time/bin/benchmark-1-server-launch-time &
-sleep 0.5
+sleep 0.4
 ./quit/build/install/quit/bin/quit
 sleep 1
 
