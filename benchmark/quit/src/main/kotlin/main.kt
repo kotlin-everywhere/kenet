@@ -15,7 +15,7 @@ fun main() = runBlocking {
             if (elapsed >= 2_000) {
                 throw e
             }
-            delay(50)
+            delay(10)
         }
     }
     client.kenet.quit(Unit)
