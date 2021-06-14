@@ -1,4 +1,5 @@
 benchmark:
 	./gradlew clean installDist installShadowDist
-	cd benchmark && ./benchmark.sh
+	./benchmark/benchmark.sh
+	./benchmark/benchmark-validation.sh
 .PHONY: benchmark
