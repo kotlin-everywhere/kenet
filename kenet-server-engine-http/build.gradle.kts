@@ -20,7 +20,7 @@ kotlin {
         @Suppress("UNUSED_VARIABLE")
         val jvmMain by getting {
             dependencies {
-                implementation("ch.qos.logback:logback-classic:1.2.3")
+                implementation("org.slf4j:slf4j-simple:1.7.25")
             }
         }
 
