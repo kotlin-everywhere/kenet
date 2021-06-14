@@ -32,3 +32,9 @@ kotlin {
         }
     }
 }
+
+configurations {
+    all {
+        exclude(group = "com.typesafe", module = "config")
+    }
+}
