@@ -16,12 +16,17 @@ export TZ=Asia/Seoul
 rm -f result-*.txt
 
 date >>result.txt
-echo "* lsb_release -a"
-lsb_release -a | tee -a result.txt || echo "N/A" >>result.txt
+
+echo "* /proc/version" >>result.txt
+tee -a result.txt </proc/version || echo "N/A" >>result.txt
 echo "" >>result.txt
 
-echo "* /proc/cpuinfo"
-tee -a result.txt </proc/cpuinfo || echo "N/A"
+echo "* /proc/cpuinfo" >>result.txt
+tee -a result.txt </proc/cpuinfo || echo "N/A" >>result.txt
+echo "" >>result.txt
+
+echo "* /proc/meminfo" >>result.txt
+tee -a result.txt </proc/meminfo || echo "N/A" >>result.txt
 echo "" >>result.txt
 
 ./benchmark-2-memory-usage/build/install/benchmark-2-memory-usage/bin/benchmark-2-memory-usage &
