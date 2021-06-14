@@ -32,6 +32,10 @@ echo "* /proc/meminfo" >>result.txt
 tee -a result.txt </proc/meminfo || echo "N/A" >>result.txt
 echo "" >>result.txt
 
+# exit gradle daemon -- gradle daemon will impact performance
+../gradlew --stop
+sleep 1
+
 ./benchmark-1-server-launch-time/build/install/benchmark-1-server-launch-time/bin/benchmark-1-server-launch-time &
 ./quit/build/install/quit/bin/quit
 sleep 1
