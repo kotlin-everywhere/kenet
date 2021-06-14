@@ -31,21 +31,18 @@ fun Api.init(quitDeferred: CompletableDeferred<Unit>, serverStartedAt: Milliseco
 @JvmInline
 value class Milliseconds(val ms: Long)
 
-fun main() {
+fun main() = runBlocking {
     val serverStartedAt = Milliseconds(System.currentTimeMillis())
+    val serverQuitDeferred = CompletableDeferred<Unit>()
 
-    runBlocking {
-        val serverQuitDeferred = CompletableDeferred<Unit>()
-
-        val api = Api().apply {
-            init(serverQuitDeferred, serverStartedAt)
-        }
-        val server = createServer(api, HttpEngine())
-        val serverJob = launch {
-            server.launch(5000)
-        }
-
-        serverQuitDeferred.await()
-        serverJob.cancelAndJoin()
+    val api = Api().apply {
+        init(serverQuitDeferred, serverStartedAt)
     }
+    val server = createServer(api, HttpEngine())
+    val serverJob = launch {
+        server.launch(5000)
+    }
+
+    serverQuitDeferred.await()
+    serverJob.cancelAndJoin()
 }
