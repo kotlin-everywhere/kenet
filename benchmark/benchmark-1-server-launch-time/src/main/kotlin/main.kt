@@ -3,7 +3,7 @@ import org.kotlin.everywhere.net.HttpEngine
 import org.kotlin.everywhere.net.createServer
 import org.kotlin.everywhere.net.invoke
 
-fun Api.init(quitDeferred: CompletableDeferred<Unit>, serverStartedAt: Milliseconds) {
+fun Api.init(mainScope: CoroutineScope, quitDeferred: CompletableDeferred<Unit>, serverStartedAt: Milliseconds) {
     benchmark {
         val launchedAt = Milliseconds(System.currentTimeMillis())
         val launchTime = launchedAt.ms - serverStartedAt.ms
@@ -18,7 +18,7 @@ fun Api.init(quitDeferred: CompletableDeferred<Unit>, serverStartedAt: Milliseco
         logResult("1-server-launch-time", launchTime)
     }
     quit.invoke {
-        GlobalScope.launch {
+        mainScope.launch {
             delay(1000)
             quitDeferred.complete(Unit)
         }
@@ -34,7 +34,7 @@ fun main() = runBlocking {
     val serverQuitDeferred = CompletableDeferred<Unit>()
 
     val api = Api().apply {
-        init(serverQuitDeferred, serverStartedAt)
+        init(this@runBlocking, serverQuitDeferred, serverStartedAt)
     }
     val server = createServer(api, HttpEngine())
     val serverJob = launch {

@@ -3,7 +3,7 @@ import org.kotlin.everywhere.net.HttpEngine
 import org.kotlin.everywhere.net.createServer
 import org.kotlin.everywhere.net.invoke
 
-fun Api.init(quitDeferred: CompletableDeferred<Unit>) {
+fun Api.init(mainScope: CoroutineScope, quitDeferred: CompletableDeferred<Unit>) {
     benchmark {
         val usedMemory = Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()
         log(
@@ -16,7 +16,7 @@ fun Api.init(quitDeferred: CompletableDeferred<Unit>) {
         logResult("2-memory-usage", usedMemory)
     }
     quit.invoke {
-        GlobalScope.launch {
+        mainScope.launch {
             delay(1000)
             quitDeferred.complete(Unit)
         }
@@ -24,19 +24,17 @@ fun Api.init(quitDeferred: CompletableDeferred<Unit>) {
     }
 }
 
-fun main() {
-    runBlocking {
-        val serverQuitDeferred = CompletableDeferred<Unit>()
+fun main() = runBlocking {
+    val serverQuitDeferred = CompletableDeferred<Unit>()
 
-        val api = Api().apply {
-            init(serverQuitDeferred)
-        }
-        val server = createServer(api, HttpEngine())
-        val serverJob = launch {
-            server.launch(5000)
-        }
-
-        serverQuitDeferred.await()
-        serverJob.cancelAndJoin()
+    val api = Api().apply {
+        init(this@runBlocking, serverQuitDeferred)
     }
+    val server = createServer(api, HttpEngine())
+    val serverJob = launch {
+        server.launch(5000)
+    }
+
+    serverQuitDeferred.await()
+    serverJob.cancelAndJoin()
 }

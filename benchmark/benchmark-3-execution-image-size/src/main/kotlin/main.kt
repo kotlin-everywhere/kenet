@@ -6,7 +6,7 @@ import java.io.File
 
 private class TargetForJarPath
 
-fun Api.init(quitDeferred: CompletableDeferred<Unit>) {
+fun Api.init(mainScope: CoroutineScope, quitDeferred: CompletableDeferred<Unit>) {
     benchmark {
         val imageFile = TargetForJarPath::class.java.protectionDomain.codeSource.location.toURI().let(::File)
         val imageSize = imageFile.length()
@@ -20,7 +20,7 @@ fun Api.init(quitDeferred: CompletableDeferred<Unit>) {
         logResult("3-execution-image-size", imageSize)
     }
     quit.invoke {
-        GlobalScope.launch {
+        mainScope.launch {
             delay(1000)
             quitDeferred.complete(Unit)
         }
@@ -33,7 +33,7 @@ fun main() {
         val serverQuitDeferred = CompletableDeferred<Unit>()
 
         val api = Api().apply {
-            init(serverQuitDeferred)
+            init(this@runBlocking, serverQuitDeferred)
         }
         val server = createServer(api, HttpEngine())
         val serverJob = launch {
