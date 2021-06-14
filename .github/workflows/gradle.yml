@@ -21,7 +21,6 @@ jobs:
       with:
         java-version: '16'
         distribution: 'zulu'
-        architecture: x86
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
