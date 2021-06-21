@@ -1,5 +1,5 @@
 import kotlinx.coroutines.*
-import org.kotlin.everywhere.net.HttpEngine
+import org.kotlin.everywhere.net.HttpServerEngine
 import org.kotlin.everywhere.net.createServer
 import org.kotlin.everywhere.net.invoke
 
@@ -36,7 +36,7 @@ fun main() = runBlocking {
     val api = Api().apply {
         init(this@runBlocking, serverQuitDeferred, serverStartedAt)
     }
-    val server = createServer(api, HttpEngine())
+    val server = createServer(api, HttpServerEngine())
     val serverJob = launch {
         server.launch(5000)
     }

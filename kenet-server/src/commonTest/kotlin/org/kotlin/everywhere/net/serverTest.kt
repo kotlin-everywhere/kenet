@@ -15,7 +15,7 @@ class SeverTest {
         }
 
         val api = Api().apply { init() }
-        val server = createServer(api, TestEngine())
+        val server = createServer(api, TestServerEngine())
         assertIs<Server>(server, "서버를 생성하면 서버가 생성된다.")
     }
 }

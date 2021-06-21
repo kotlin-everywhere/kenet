@@ -4,12 +4,22 @@ plugins {
 
 kotlin {
     jvm()
+    js {
+        browser()
+        binaries.executable()
+    }
 
     sourceSets {
         @Suppress("UNUSED_VARIABLE")
         val commonMain by getting {
             dependencies {
-                implementation(project(":kenet-client"))
+                implementation(project(":kenet-client-engine-http"))
+            }
+        }
+
+        @Suppress("UNUSED_VARIABLE")
+        val jvmMain by getting {
+            dependencies {
                 implementation(project(":kenet-server-engine-http"))
             }
         }

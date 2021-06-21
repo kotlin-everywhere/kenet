@@ -9,7 +9,7 @@ kotlin {
         val main by getting {
             dependencies {
                 implementation(project(":benchmark:common"))
-                implementation(project(":kenet-client"))
+                implementation(project(":kenet-client-engine-http"))
             }
         }
     }

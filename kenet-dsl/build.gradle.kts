@@ -6,6 +6,10 @@ plugins {
 
 kotlin {
     jvm()
+    js {
+        browser()
+        binaries.executable()
+    }
 
     sourceSets {
         @Suppress("UNUSED_VARIABLE")

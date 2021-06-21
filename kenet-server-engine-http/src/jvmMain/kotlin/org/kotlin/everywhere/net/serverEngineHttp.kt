@@ -11,7 +11,7 @@ import io.ktor.server.engine.*
 import kotlinx.coroutines.CompletableDeferred
 
 
-actual class HttpEngine actual constructor() : Engine() {
+actual class HttpServerEngine actual constructor() : ServerEngine() {
     actual override suspend fun launch(port: Int, kenet: Kenet) {
         val es = embeddedServer(CIO, port = port, watchPaths = listOf()) {
             install(ContentNegotiation) {
