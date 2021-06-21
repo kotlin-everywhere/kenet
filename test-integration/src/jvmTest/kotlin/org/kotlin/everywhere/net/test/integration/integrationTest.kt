@@ -26,7 +26,7 @@ class JvmEchoTest {
         val serverJob = launch { server.launch(5000) }
         delay(1000)
 
-        val client = createClient(api, HttpClientEngine())
+        val client = createClient(api, HttpClientEngine("http://localhost:5000"))
         val returnedMessage = client.kenet.echo("hello, world!")
         assertEquals("hello, world!", returnedMessage)
 

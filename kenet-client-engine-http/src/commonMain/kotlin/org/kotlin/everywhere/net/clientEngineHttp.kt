@@ -9,7 +9,7 @@ import io.ktor.http.*
 import kotlinx.serialization.json.Json
 
 
-class HttpClientEngine : ClientEngine() {
+class HttpClientEngine(private val urlPrefix: String) : ClientEngine() {
     private val client = HttpClient {
         install(Logging) {
             logger = Logger.DEFAULT
@@ -21,7 +21,7 @@ class HttpClientEngine : ClientEngine() {
     }
 
     override suspend fun <P : Any, R : Any> call(call: Call<P, R>, parameter: P): R {
-        val response = client.post<Response>("http://localhost:5000/kenet") {
+        val response = client.post<Response>("${urlPrefix}/kenet") {
             contentType(ContentType.Application.Json)
             body = Request(call.name, Json.encodeToString(call.parameterSerializer, parameter))
         }
