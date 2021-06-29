@@ -20,7 +20,9 @@ date >>result.txt
 echo "* gradle & java" >>result.txt
 ../gradlew --version | tee -a result.txt
 # exit gradle daemon -- gradle daemon will impact performance
-../gradlew --stop
+if [ "$1" != "--stop-gradle=false" ]; then
+  ../gradlew --stop
+fi
 sleep 2
 
 echo "* /proc/version" >>result.txt
