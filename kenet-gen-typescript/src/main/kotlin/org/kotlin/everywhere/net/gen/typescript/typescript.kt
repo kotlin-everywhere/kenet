@@ -1,6 +1,6 @@
 package org.kotlin.everywhere.net.gen.typescript
 
-import org.kotlin.everywhere.net.Endpoint
+import org.kotlin.everywhere.net.Call
 import org.kotlin.everywhere.net.Kenet
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
@@ -15,8 +15,17 @@ fun define(kenet: Kenet): KenetDefinition {
         kenet::class.simpleName ?: throw IllegalArgumentException("Cannot find class simple name : kenet = $kenet")
     val callDefinitions = kenet::class
         .members
-        // Endpoint 멤버들만
-        .filter { it.returnType.isSubtypeOf(Endpoint::class.createType(listOf(KTypeProjection.STAR))) }
+        // Call 멤버들만
+        .filter {
+            it.returnType.isSubtypeOf(
+                Call::class.createType(
+                    listOf(
+                        KTypeProjection.STAR,
+                        KTypeProjection.STAR
+                    )
+                )
+            )
+        }
         .map {
             require(it.returnType.arguments.size == 2) {
                 "invalid endpoint parameter length, it must be 2(Parameter, Response) types : parameters = ${it.returnType.arguments}"
