@@ -1,7 +1,9 @@
 include(":kenet-dsl")
 include(":kenet-server", ":kenet-server-engine-http")
 include(":kenet-client", ":kenet-client-engine-http")
+include(":kenet-gen-typescript")
 include(":test-integration")
+include(":test-echo:def", ":test-echo:client-jvm", ":test-echo:server-jvm")
 
 include(
     ":benchmark:benchmark-1-server-launch-time",

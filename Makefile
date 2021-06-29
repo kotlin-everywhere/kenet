@@ -1,6 +1,5 @@
 benchmark:
-	./gradlew installDist
-	./gradlew installShadowDist
+	./gradlew installDist installShadowDist
 	./benchmark/benchmark.sh --stop-gradle=false
 	./benchmark/benchmark-validation.sh
 
@@ -10,4 +9,8 @@ clean:
 benchmark-loop: clean
 	while true; do make || exit $$?; done
 
-.PHONY: benchmark clean benchmark-loop
+test-echo:
+	./gradlew installDist
+	cd test-echo && ./test.sh
+
+.PHONY: benchmark clean benchmark-loop test-echo
