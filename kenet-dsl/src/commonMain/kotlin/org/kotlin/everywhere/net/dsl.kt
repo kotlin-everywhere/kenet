@@ -40,10 +40,10 @@ abstract class Kenet {
             endpoint
         }
     }
-}
 
-inline fun <reified P : Any, reified R : Any> Kenet.c(): ReadOnlyProperty<Kenet, Call<P, R>> {
-    return call(serializer(), serializer())
+    inline fun <reified P : Any, reified R : Any> c(): ReadOnlyProperty<Kenet, Call<P, R>> {
+        return call(serializer(), serializer())
+    }
 }
 
 sealed class Endpoint<P : Any>(

@@ -1,8 +1,6 @@
 package org.kotlin.everywhere.net.test.integration
 
 import kotlinx.coroutines.CoroutineScope
-import org.kotlin.everywhere.net.Kenet
-import org.kotlin.everywhere.net.c
 import kotlin.coroutines.CoroutineContext
 
 

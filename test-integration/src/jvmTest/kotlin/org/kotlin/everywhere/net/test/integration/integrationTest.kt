@@ -27,7 +27,7 @@ class JvmEchoTest {
         delay(1000)
 
         val client = createClient(api, HttpClientEngine("http://localhost:5000"))
-        val returnedMessage = client.kenet.echo("hello, world!")
+        val returnedMessage = client.kenet.echo.invoke("hello, world!")
         assertEquals("hello, world!", returnedMessage)
 
         serverJob.cancelAndJoin()
