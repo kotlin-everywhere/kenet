@@ -5,9 +5,8 @@ plugins {
 
 kotlin {
     jvm()
-    js {
+    js(BOTH) {
         browser()
-        binaries.executable()
     }
 
     val ktor_version = "1.6.0"

@@ -4,9 +4,8 @@ plugins {
 
 kotlin {
     jvm()
-    js {
+    js(BOTH) {
         browser()
-        binaries.executable()
     }
 
     sourceSets {
