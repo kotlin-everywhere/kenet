@@ -4,11 +4,36 @@
 
 ![kenet](https://user-images.githubusercontent.com/682021/123745117-c260c200-d8ea-11eb-88fd-1e465cd47e00.png)
 
-Kotlin Everywhere Network
+kenet is Kotlin Everywhere Network Framework.
+kenet is lightweitght network frameork for full duplex comminucation and type safe. It is designed to make getting started quick and easy, with the ability to scale up to complex applications with kotlin. 
 
+TODO ::  add links
+
+# Installing
+
+TODO :: Gradle 
+
+# A Simple Example
+
+```kotlin
+// TODO :: echo example
+```
+
+# Contributing
+
+TODO :: how to contribute
+
+# Donate
+
+TODO :: how to donate
+
+# Links
+
+TODO :: facebook 등 링크 
 
 
 # 코딩 컨벤션
+TODO :: how to contribute
 
 ## 파일명
 
