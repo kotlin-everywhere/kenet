@@ -29,8 +29,8 @@ TODO :: how to donate
 
 # Links
 
-TODO :: facebook 등 링크 
-
+Mine-K : http://mine-k.co.kr/
+Facebook Group : https://www.facebook.com/groups/kenetframework
 
 # 코딩 컨벤션
 TODO :: how to contribute
