@@ -26,6 +26,8 @@ TODO :: how to contribute
 # Donate
 
 TODO :: how to donate
+
+
 페이팔 도네이션 (https://www.paypal.com/donate/buttons)
 
 # Links
