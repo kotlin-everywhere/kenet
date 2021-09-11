@@ -6,8 +6,7 @@ import kotlinx.serialization.serializer
 import kotlin.properties.ReadOnlyProperty
 
 abstract class Kenet {
-    val _endpoints = mutableListOf<Endpoint<*>>()
-
+    val _endpoints = mutableListOf<Endpoint>()
     var _client: KenetClient? = null
 
     /**
@@ -15,17 +14,24 @@ abstract class Kenet {
      */
     private var anonymousEndpointIndex = 0
 
+    private fun newEndpointName(): String {
+        return "anonymousEndpoint#${anonymousEndpointIndex++}"
+    }
+
     @PublishedApi
     internal fun <P : Any, R : Any> call(
         parameterSerializer: KSerializer<P>,
         responseSerializer: KSerializer<R>
-    ): ReadOnlyProperty<Kenet, Call<P, R>> = createEndpointProperty { index, anonymousName ->
-        Call(this, index, false, anonymousName, parameterSerializer, responseSerializer)
-    }
+    ): ReadOnlyProperty<Kenet, Call<P, R>> = createEndpointProperty(
+        { anonymousName -> Call(this, anonymousName, parameterSerializer, responseSerializer) },
+        { it }
+    )
 
-    private fun <T : Endpoint<*>> createEndpointProperty(create: (index: Int, anonymousName: String) -> T): ReadOnlyProperty<Kenet, T> {
-        val index = anonymousEndpointIndex++
-        val endpoint = create(index, "anonymousEndpoint#${index}")
+    private fun <T : Endpoint, U> createEndpointProperty(
+        create: (anonymousName: String) -> T,
+        mapper: (T) -> U
+    ): ReadOnlyProperty<Kenet, U> {
+        val endpoint = create(newEndpointName())
 
         _endpoints.add(endpoint)
 
@@ -37,34 +43,43 @@ abstract class Kenet {
                 endpoint.name = property.name
                 endpoint.initialized = true
             }
-            endpoint
+            mapper(endpoint)
         }
     }
 
     inline fun <reified P : Any, reified R : Any> c(): ReadOnlyProperty<Kenet, Call<P, R>> {
         return call(serializer(), serializer())
     }
+
+    fun <T : Kenet> c(sub: T): ReadOnlyProperty<Kenet, T> {
+        return createEndpointProperty(
+            { name -> SubKenet(this, name, sub) },
+            { sub }
+        )
+    }
 }
 
-sealed class Endpoint<P : Any>(
+sealed class Endpoint(
     val kenet: Kenet,
-    internal val index: Int,
-    internal var initialized: Boolean,
     var name: String,
-    val parameterSerializer: KSerializer<P>
+    internal var initialized: Boolean = false,
 )
 
 class Call<P : Any, R : Any>(
     kenet: Kenet,
-    index: Int,
-    initialized: Boolean,
     name: String,
-    parameterSerializer: KSerializer<P>,
+    val parameterSerializer: KSerializer<P>,
     val responseSerializer: KSerializer<R>
-) : Endpoint<P>(kenet, index, initialized, name, parameterSerializer) {
+) : Endpoint(kenet, name) {
     var handler: (P) -> R =
         { _ -> throw NotImplementedError("API 사용법 오류(Invalid API usage) : ${name}의 핸들러가 정의되지 않았습니다..") }
 }
+
+class SubKenet<T : Kenet>(
+    kenet: Kenet,
+    name: String,
+    val sub: T
+) : Endpoint(kenet, name)
 
 interface KenetClient
 

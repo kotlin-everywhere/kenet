@@ -45,4 +45,28 @@ class DslTest {
         // 기본 상태 익명 이름, 실제 입력된 순서와 동일한지 확인
         assertEquals("call", api.call.name, "초기화되면 실제 프로퍼티명을 가지고 있어야 한다.")
     }
+
+    /**
+     * 하위 케넷 초기화 확인
+     * 하위 케넷 이름 초기화 확인
+     */
+    @Test
+    fun testEndpointSubInitialized() {
+        val subApi = object : Kenet() {}
+
+        class Api : Kenet() {
+            val sub by c(subApi)
+        }
+
+        val api = Api()
+        // 호출하지 않은 기본 상태에서 직접 액세스 하면 아직 초기화되지 않은 상태이다.
+        assertFalse(api._endpoints[0].initialized, "호출하지 않은 상태에서는 초기화되기 전이다.")
+        // 기본 상태 익명 이름, 실제 입력된 순서와 동일한지 확인
+        assertEquals("anonymousEndpoint#0", api._endpoints[0].name, "초기화 전에는 anonymous#index 형식의 이름을 가지고 있어야 한다.")
+
+        // dot(.) 형식으로 액세스하여 사용하면, 초기화된다.
+        assertSame(api.sub, subApi, "dot(.) 으로 가져오는 sub 와 실제 subApi 는 동일한 Instance 이어야 한다.")
+        assertTrue(api._endpoints[0].initialized, "호출하면 초기화되어야 한다.")
+        assertEquals("sub", api._endpoints[0].name, "초기화되면 실제 프로퍼티명을 가지고 있어야 한다.")
+    }
 }
