@@ -9,6 +9,7 @@ include(
     ":benchmark:benchmark-1-server-launch-time",
     ":benchmark:benchmark-2-memory-usage",
     ":benchmark:benchmark-3-execution-image-size",
+    ":benchmark:benchmark-4-generate-typescript",
 )
 
 include(":benchmark:common", ":benchmark:quit")

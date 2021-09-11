@@ -2,6 +2,8 @@ package org.kotlin.everywhere.net.gen.typescript
 
 import org.kotlin.everywhere.net.Call
 import org.kotlin.everywhere.net.Kenet
+import java.io.File
+import java.nio.file.Path
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
@@ -45,7 +47,7 @@ internal fun define(kenet: Kenet): KenetDefinition {
 }
 
 internal fun render(def: KenetDefinition): List<String> {
-    return listOf("class ${def.name} extends KenetClient {") +
+    return listOf("export class ${def.name} extends KenetClient {") +
             def.callDefinitions.flatMap { render(it) } +
             listOf("}")
 }
@@ -65,4 +67,16 @@ internal fun renderType(createType: KType): String {
 fun generate(kenet: Kenet): String {
     return (listOf("import { KenetClient } from './kenet.ts';", "") + render(define(kenet)))
         .joinToString("\n")
+}
+
+fun generate(kenet: Kenet, path: Path, name: String) {
+    val directory = path.toFile()
+    if (!directory.exists()) {
+        assert(directory.mkdirs()) { "cannot create target path : path=${path}" }
+    }
+
+    File(directory, "kenet.ts").writeBytes(
+        object {}.javaClass.getResourceAsStream("/kenet.ts").use { it!!.readAllBytes() }
+    )
+    File(directory, "$name.ts").writeText(generate(kenet))
 }

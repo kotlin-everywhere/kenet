@@ -48,3 +48,6 @@ sleep 1
 java -jar benchmark-3-execution-image-size/build/libs/benchmark-3-execution-image-size-all.jar &
 ./quit/build/install/quit/bin/quit
 sleep 1
+
+benchmark-4-generate-typescript/build/install/benchmark-4-generate-typescript/bin/benchmark-4-generate-typescript
+deno run benchmark-4-generate-typescript/verify.ts | tee -a result.txt

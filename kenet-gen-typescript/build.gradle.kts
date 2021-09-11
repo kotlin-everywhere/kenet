@@ -7,7 +7,7 @@ kotlin {
         @Suppress("UNUSED_VARIABLE")
         val main by getting {
             dependencies {
-                implementation(project(":kenet-dsl"))
+                api(project(":kenet-dsl"))
                 implementation(kotlin("reflect"))
             }
         }

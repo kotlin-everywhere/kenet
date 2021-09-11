@@ -61,20 +61,20 @@ class TestTypescript {
     fun testRenderKenetDefinition() {
         // 전체 규격 확인
         assertEquals(
-            listOf("class Def extends KenetClient {", "}"),
+            listOf("export class Def extends KenetClient {", "}"),
             render(KenetDefinition("Def", listOf()))
         )
 
         // 클래스 이름 출력 확인
         assertEquals(
-            listOf("class Api extends KenetClient {", "}"),
+            listOf("export class Api extends KenetClient {", "}"),
             render(KenetDefinition("Api", listOf()))
         )
 
         // 콜 출력 확인
         assertEquals(
             listOf(
-                "class Def extends KenetClient {",
+                "export class Def extends KenetClient {",
                 "readonly echo = this.c<string, string>('echo');",
                 "}"
             ),
@@ -148,7 +148,7 @@ class TestTypescript {
             """
                 import { KenetClient } from './kenet.ts';
                 
-                class Def extends KenetClient {
+                export class Def extends KenetClient {
                 readonly echo = this.c<string, string>('echo');
                 readonly parseInt = this.c<string, number>('parseInt');
                 readonly reflect = this.c<number, number>('reflect');

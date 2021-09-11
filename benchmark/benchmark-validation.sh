@@ -22,4 +22,9 @@ if [ "$RESULT_3_EXECUTION_IMAGE_SIZE" -ge 10485760 ]; then
   die "overflow execution image size : image-size = $RESULT_3_EXECUTION_IMAGE_SIZE"
 fi
 
+RESULT_4_GENERATE_TYPESCRIPT="$(cat result-4-generate-typescript.txt)"
+if [ "$RESULT_4_GENERATE_TYPESCRIPT" -ge 10000 ]; then
+  die "overflow generate times : generate-times = $RESULT_4_GENERATE_TYPESCRIPT"
+fi
+
 echo "* benchmark result validation : PASS"

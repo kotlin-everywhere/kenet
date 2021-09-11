@@ -16,22 +16,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 16
-      uses: actions/setup-java@v2
-      with:
-        java-version: '16'
-        distribution: 'adopt'
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build installDist installShadowDist
-    - name: Benchmark
-      run: ./benchmark/benchmark.sh
-    - name: Archive Result
-      uses: actions/upload-artifact@v2
-      with:
-         name: result
-         path: benchmark/result*.txt
-    - name: Benchmark Validation
-      run: ./benchmark/benchmark-validation.sh
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup deno # to verifying typescript generate
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: vx.x.x
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build installDist installShadowDist
+      - name: Benchmark
+        run: ./benchmark/benchmark.sh
+      - name: Archive Result
+        uses: actions/upload-artifact@v2
+        with:
+          name: result
+          path: benchmark/result*.txt
+      - name: Benchmark Validation
+        run: ./benchmark/benchmark-validation.sh
