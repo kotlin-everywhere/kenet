@@ -6,12 +6,22 @@ import kotlin.test.assertIs
 class SeverTest {
     @Test
     fun testCompile() {
+        class SubApi : Kenet() {
+            val echo2 by c<String, String>()
+        }
+
         class Api : Kenet() {
             val echo by c<String, String>()
+            val sub by c(SubApi())
+        }
+
+        fun SubApi.init() {
+            echo2 { it }
         }
 
         fun Api.init() {
             echo { it }
+            sub.init()
         }
 
         val api = Api().apply { init() }
