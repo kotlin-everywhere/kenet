@@ -85,9 +85,35 @@ Dependency 추가
 
 - `fetch upstream`: kenet project의 변경사항을 자신의 kenet repository에 업데이트, 프로젝트 `fork`한 뒤, `pull request` 하기 전에 kenet에 변경사항이 있을 수 있으므로 `fetch upstream` 진행한다.
 
-## 커밋 메시지
+## 커밋 메시지 컨벤션
 
 Conventional Commits : https://www.conventionalcommits.org/en/v1.0.0/
+
+커밋 메시지는 `<type>`을 제외하고 한글로 작성한다.
+
+```markdown
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### \<type>
+
+`fix` : 코드상의 버그 관련 수정
+
+`feat` : 새로운 기능의 코드 추가
+
+`BREAKING CHANGE` : 주요 API 변화가 있을 때 footer 위치에 작성
+
+예시
+```markdown
+docs(README): 맞춤법 수정
+```
+```markdown
+feat(dsl): Sub Endpoint 추가
+```
 
 ## 코딩 컨벤션
 
