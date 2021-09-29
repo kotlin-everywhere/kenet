@@ -30,7 +30,7 @@ Dependency 추가
 
 ## maven
 Build 파일에 JitPack repository 추가
-```dtd
+```xml
     <repositories>
         <repository>
             <id>jitpack.io</id>
@@ -39,7 +39,7 @@ Build 파일에 JitPack repository 추가
     </repositories>
 ```
 Dependency 추가
-```dtd
+```xml
     <dependency>
         <groupId>com.github.kotlin-everywhere</groupId>
         <artifactId>kenet</artifactId>
