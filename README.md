@@ -9,9 +9,63 @@ kenet is lightweitght network framework for full duplex comminucation and type s
 
 TODO ::  add links
 
-# Installing
+# Installing with JitPack
 
-TODO :: Gradle
+## gradle
+JitPack repository를 root `build.gradle` 파일의 repositories 맨아래에 추가
+```groovy
+    allprojects {
+        repositories {
+            ...
+            maven { url 'https://jitpack.io' }
+        }
+    }
+```
+Dependency 추가
+```groovy
+    dependencies {
+        implementation 'com.github.kotlin-everywhere:kenet:0.1.0'
+    }
+```
+
+## maven
+Build 파일에 JitPack repository 추가
+```dtd
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+```
+Dependency 추가
+```dtd
+    <dependency>
+        <groupId>com.github.kotlin-everywhere</groupId>
+        <artifactId>kenet</artifactId>
+        <version>0.1.0</version>
+    </dependency>
+```
+
+## sbt
+`build.sbt` 파일의 resolvers 마지막에 JitPack repository 추가
+```shell
+  resolvers += "jitpack" at "https://jitpack.io"
+```
+dependency 추가
+```shell
+  libraryDependencies += "com.github.kotlin-everywhere" % "kenet" % "0.1.0"
+```
+
+## leiningen
+`project.clj` 파일의 repositories 마지막에 JitPack repository 추가
+```shell
+  :repositories [["jitpack" "https://jitpack.io"]]
+```
+Dependency 추가
+```shell
+  :dependencies [[com.github.kotlin-everywhere/kenet "0.1.0"]]
+```
 
 # A Simple Example
 
