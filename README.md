@@ -75,7 +75,15 @@ Dependency 추가
 
 # Contributing
 
-TODO :: how to contribute
+1. `fork` kenet project
+   ![fork](https://user-images.githubusercontent.com/46353755/135192763-325b828a-8aa8-4397-b35c-5145ce897b84.png)
+2. kenet의 소스코드 보완 및 수정 후 `commit`
+3. 자신의 github kenet repository에 변경사항 `push`
+4. 자신의 github kenet repository에서 `Pull request` 열고 변경사항 내용 작성
+   ![pull_request](https://user-images.githubusercontent.com/46353755/135196660-9e4d7eb1-b1ca-4e8b-8283-765f84c939c2.png)
+5. `merge` 요청 후 프로젝트 관리자의 응답 대기 (승인 또는 거절될 수 있음)
+
+- `fetch upstream`: kenet project의 변경사항을 자신의 kenet repository에 업데이트, 프로젝트 `fork`한 뒤, `pull request` 하기 전에 kenet에 변경사항이 있을 수 있으므로 `fetch upstream` 진행한다.
 
 ## 커밋 메시지
 
