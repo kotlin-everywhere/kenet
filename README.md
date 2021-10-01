@@ -47,26 +47,6 @@ Dependency 추가
     </dependency>
 ```
 
-## sbt
-`build.sbt` 파일의 resolvers 마지막에 JitPack repository 추가
-```shell
-  resolvers += "jitpack" at "https://jitpack.io"
-```
-dependency 추가
-```shell
-  libraryDependencies += "com.github.kotlin-everywhere" % "kenet" % "0.1.0"
-```
-
-## leiningen
-`project.clj` 파일의 repositories 마지막에 JitPack repository 추가
-```shell
-  :repositories [["jitpack" "https://jitpack.io"]]
-```
-Dependency 추가
-```shell
-  :dependencies [[com.github.kotlin-everywhere/kenet "0.1.0"]]
-```
-
 # A Simple Example
 
 ```kotlin
