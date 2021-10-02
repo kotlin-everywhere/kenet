@@ -4,6 +4,7 @@ import org.kotlin.everywhere.net.Kenet
 import kotlin.reflect.full.createType
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class TestTypescript {
     @Test
@@ -11,35 +12,56 @@ class TestTypescript {
         class Def : Kenet() {
             val echo by c<String, String>()
             val toString by c<Int, String>()
+            val sub by c(object : Kenet() {
+                val echo2 by c<String, String>()
+                val sub2 by c(object : Kenet() {
+                    val echo3 by c<String, String>()
+                })
+            })
         }
 
         val def = Def()
         val definition = define(def)
+
         assertEquals("Def", definition.name, "Kenet 을 정의한 Class 명 확인")
-        assertEquals(2, definition.callDefinitions.size, "정의한 endpoint 갯수 출력 확인")
-        assertEquals("echo", definition.callDefinitions[0].name, "첫번째 endpoint 이름 echo 인것 확인")
-        assertEquals(def.echo.name, definition.callDefinitions[0].name, "첫번째 endpoint 이름 실제 endpoint 와 동일한지 확인")
+        assertEquals(3, definition.definitions.size, "정의한 endpoint 갯수 출력 확인")
+
+        // 첫번째 확인
+        val echo = definition.definitions[0]
+        assertIs<CallDefinition>(echo, "echo 는 호출 지점이다.")
+        assertEquals("echo", echo.name, "첫번째 endpoint 이름 echo 인것 확인")
+        assertEquals(def.echo.name, echo.name, "첫번째 endpoint 이름 실제 endpoint 와 동일한지 확인")
         assertEquals(
             String::class.createType(),
-            definition.callDefinitions[0].parameterType,
+            echo.parameterType,
             "첫번째 endpoint 파라미터 String 타입확인"
         )
         assertEquals(
             String::class.createType(),
-            definition.callDefinitions[0].responseType,
+            echo.responseType,
             "첫번째 endpoint 응답 String 타입확인"
         )
-        assertEquals("toString", definition.callDefinitions[1].name, "두번째 endpoint 이름 toString 인것 확인")
-        assertEquals(def.toString.name, definition.callDefinitions[1].name, "두번째 endpoint 이름 실제 endpoint 와 동일한지 확인")
+
+        // 두번째 확인
+        val sub = definition.definitions[1]
+        assertIs<SubDefinition>(sub, "sub 는 하위 Kenet 이다.")
+        assertEquals("sub", sub.name, "두번째 endpoint 의 이름 sub 인것 확인")
+        assertEquals(def.sub._name, sub.name, "두번째 endpoint 의 이름 실제 endpoint 와 동일한지 확인")
+
+        // 세번쩨 확인
+        val toString = definition.definitions[2]
+        assertIs<CallDefinition>(toString, "toString 은 호출 지점이다.")
+        assertEquals("toString", toString.name, "세번째 endpoint 이름 toString 인것 확인")
+        assertEquals(def.toString.name, toString.name, "세번째 endpoint 이름 실제 endpoint 와 동일한지 확인")
         assertEquals(
             Int::class.createType(),
-            definition.callDefinitions[1].parameterType,
-            "두번째 endpoint 파라미터 String 타입확인"
+            toString.parameterType,
+            "세번째 endpoint 파라미터 String 타입확인"
         )
         assertEquals(
             String::class.createType(),
-            definition.callDefinitions[1].responseType,
-            "두번째 endpoint 응답 String 타입확인"
+            toString.responseType,
+            "세번째 endpoint 응답 String 타입확인"
         )
     }
 
@@ -47,13 +69,14 @@ class TestTypescript {
     fun testDefinitionOrder() {
         // 리플렉션은 필드의 순서를 보장하지 않는다. 항상 동일한 결과값을 보장하기 위해서 이름 순으로 정렬한다.
         class Def : Kenet() {
+            val d by c(object : Kenet() {})
             val c by c<Unit, Unit>()
             val b by c<Unit, Unit>()
             val a by c<Unit, Unit>()
         }
         assertEquals(
-            listOf("a", "b", "c"),
-            define(Def()).callDefinitions.map { it.name }
+            listOf("a", "b", "c", "d"),
+            define(Def()).definitions.map { it.name }
         )
     }
 
@@ -142,6 +165,12 @@ class TestTypescript {
             val toString by c<Int, String>()
             val parseInt by c<String, Int>()
             val reflect by c<Int, Int>()
+            val sub by c(object : Kenet() {
+                val echo2 by c<String, String>()
+                val sub2 by c(object : Kenet() {
+                    val echo3 by c<String, String>()
+                })
+            })
         }
 
         assertEquals(
@@ -152,6 +181,12 @@ class TestTypescript {
                 readonly echo = this.c<string, string>('echo');
                 readonly parseInt = this.c<string, number>('parseInt');
                 readonly reflect = this.c<number, number>('reflect');
+                readonly sub = this.s('sub', new (class sub extends KenetClient {
+                readonly echo2 = this.c<string, string>('echo2');
+                readonly sub2 = this.s('sub2', new (class sub2 extends KenetClient {
+                readonly echo3 = this.c<string, string>('echo3');
+                }));
+                }));
                 readonly toString = this.c<number, string>('toString');
                 }
             """.trimIndent(),
