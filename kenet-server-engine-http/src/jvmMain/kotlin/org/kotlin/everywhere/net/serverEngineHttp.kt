@@ -21,7 +21,7 @@ actual class HttpServerEngine actual constructor() : ServerEngine() {
             routing {
                 post("/kenet") {
                     val request = call.receive<Request>()
-                    val endpoint = kenet._endpoints.firstOrNull { it.name == request.endpointName }
+                    val endpoint = findEndpoint(kenet, request.subPath, request.endpointName)
                     // TODO :: Error 응답 리턴
                     check(endpoint != null) { "요청한 ENDPOINT 를 찾을 수 없습니다." }
                     // TODO :: Error 응답 리턴

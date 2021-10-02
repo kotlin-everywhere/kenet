@@ -36,9 +36,9 @@ class JvmEchoTest {
         val echo = client.kenet.echo.invoke("hello, world!")
         assertEquals("hello, world!", echo)
 
-        // TODO :: client 전달 및 이름 정의 추가
-//        val echo2 = client.kenet.sub.echo2.invoke("hello, 2 world!")
-//        assertEquals("hello, 2 world!", echo2)
+//         TODO :: client 전달 및 이름 정의 추가
+        val echo2 = client.kenet.sub.echo2.invoke("hello, 2 world!")
+        assertEquals("hello, 2 world!", echo2)
 
 
         serverJob.cancelAndJoin()

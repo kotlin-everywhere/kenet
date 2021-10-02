@@ -8,6 +8,8 @@ import kotlin.properties.ReadOnlyProperty
 abstract class Kenet {
     val _endpoints = mutableListOf<Endpoint>()
     var _client: KenetClient? = null
+    var _parent: Kenet? = null
+    var _name: String = ""
 
     /**
      * 최초 생성시 이름 지정용 인덱스, 그냥 이름 자리에 null 이 들어가는게 싫다.
@@ -41,6 +43,9 @@ abstract class Kenet {
                     throw AssertionError("API 사용법 오류(Invalid API usage) : Endpoint 를 생성한 클래스와 사용하는 클래스가 다르다.")
                 }
                 endpoint.name = property.name
+                if (endpoint is SubKenet<*>) {
+                    endpoint.sub._name = property.name
+                }
                 endpoint.initialized = true
             }
             mapper(endpoint)
@@ -52,6 +57,8 @@ abstract class Kenet {
     }
 
     fun <T : Kenet> c(sub: T): ReadOnlyProperty<Kenet, T> {
+        // TODO :: _parent 가 null 인지 확인 추가
+        sub._parent = this
         return createEndpointProperty(
             { name -> SubKenet(this, name, sub) },
             { sub }
@@ -84,7 +91,7 @@ class SubKenet<T : Kenet>(
 interface KenetClient
 
 @Serializable
-data class Request(val endpointName: String, val parameterJson: String)
+data class Request(val subPath: List<String>, val endpointName: String, val parameterJson: String)
 
 @Serializable
 data class Response(val responseJson: String)

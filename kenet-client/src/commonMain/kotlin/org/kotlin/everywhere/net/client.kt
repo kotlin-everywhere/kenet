@@ -2,11 +2,15 @@ package org.kotlin.everywhere.net
 
 
 suspend operator fun <P : Any, R : Any> Call<P, R>.invoke(parameter: P): R {
-    val client = kenet._client ?: throw AssertionError("API 사용법 오류(Invalid API usage) : 연결에 사용할 클라이언트 엔진이 필요하다.")
+    val client = lookupClient(kenet) ?: throw AssertionError("API 사용법 오류(Invalid API usage) : 연결에 사용할 클라이언트 엔진이 필요하다.")
     if (client !is Client<*>) {
         throw AssertionError("API 사용법 오류(Invalid API usage) : 올바른 클라이언트가 아니다.")
     }
     return client.call(this, parameter)
+}
+
+private fun lookupClient(kenet: Kenet): KenetClient? {
+    return kenet._client ?: kenet._parent?.let(::lookupClient)
 }
 
 class Client<T : Kenet>(val kenet: T, private val engine: ClientEngine) : KenetClient {

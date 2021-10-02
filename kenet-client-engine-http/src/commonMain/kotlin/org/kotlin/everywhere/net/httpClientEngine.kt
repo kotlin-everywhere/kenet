@@ -23,8 +23,26 @@ class HttpClientEngine(private val urlPrefix: String) : ClientEngine() {
     override suspend fun <P : Any, R : Any> call(call: Call<P, R>, parameter: P): R {
         val response = client.post<Response>("${urlPrefix}/kenet") {
             contentType(ContentType.Application.Json)
-            body = Request(call.name, Json.encodeToString(call.parameterSerializer, parameter))
+            body = createRequest(call, parameter)
         }
         return Json.decodeFromString(call.responseSerializer, response.responseJson)
+    }
+}
+
+fun <P : Any, R : Any> createRequest(call: Call<P, R>, parameter: P): Request {
+    return Request(createSubPath(call.kenet), call.name, Json.encodeToString(call.parameterSerializer, parameter))
+}
+
+internal fun createSubPath(kenet: Kenet): List<String> {
+    return createSubPath(kenet, mutableListOf())
+}
+
+private tailrec fun createSubPath(kenet: Kenet, path: MutableList<String>): List<String> {
+    val parent = kenet._parent
+    return if (parent == null) {
+        path
+    } else {
+        path.add(0, kenet._name)
+        createSubPath(parent, path)
     }
 }
