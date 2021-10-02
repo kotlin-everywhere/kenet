@@ -2,5 +2,12 @@
   "private": true,
   "dependencies": {
     "prettier": "^2.3.2"
+  },
+  "version": "0.1.1",
+  "devDependencies": {
+    "standard-version": "^9.3.1"
+  },
+  "scripts": {
+    "release": "standard-version"
   }
 }
