@@ -5,3 +5,8 @@ before_install:
   - sdk update
   - sdk install java 16.0.2-open
   - sdk use java 16.0.2-open
+  -
+install:
+  # TODO :: Headless Browser 를 jitpack 에 설치할 때 까지는 일단 테스트 없이 빌드한다.
+  - echo "Running a install without tests, to skip kotlin browser test"
+  - ./gradlew clean install -xtest
