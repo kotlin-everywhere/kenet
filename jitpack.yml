@@ -8,5 +8,7 @@ before_install:
   -
 install:
   # TODO :: Headless Browser 를 jitpack 에 설치할 때 까지는 일단 테스트 없이 빌드한다.
-  - echo "Running a install without tests, to skip kotlin browser test"
-  - ./gradlew clean build -xtest
+  - echo "Running a install without browser tests, to skip kotlin browser test"
+  - ./gradlew clean
+  - ./gradlew build -x jsIrBrowserTest -x jsLegacyBrowserTest
+  - ./gradlew publishToMavenLocal
