@@ -2,6 +2,7 @@ package org.kotlin.everywhere.net
 
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -16,6 +17,18 @@ actual class HttpServerEngine actual constructor() : ServerEngine() {
         val es = embeddedServer(CIO, port = port, watchPaths = listOf()) {
             install(ContentNegotiation) {
                 json()
+                // TODO :: 실행옵션으로 변경, 필요없는 allow 제거
+                install(CORS) {
+                    method(HttpMethod.Options)
+                    method(HttpMethod.Put)
+                    method(HttpMethod.Delete)
+                    method(HttpMethod.Patch)
+                    header(HttpHeaders.Authorization)
+                    header(HttpHeaders.ContentType)
+                    allowCredentials = true
+                    allowNonSimpleContentTypes = true
+                    anyHost()
+                }
             }
 
             routing {
