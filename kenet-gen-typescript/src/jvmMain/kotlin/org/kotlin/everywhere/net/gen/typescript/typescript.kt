@@ -101,7 +101,7 @@ internal fun renderType(createType: KType): String {
 }
 
 fun generate(kenet: Kenet): String {
-    return (listOf("import { KenetClient } from './kenet.ts';", "") + render(define(kenet)))
+    return (listOf("// @ts-ignore","import { KenetClient } from './kenet.ts';", "") + render(define(kenet)))
         .joinToString("\n")
 }
 

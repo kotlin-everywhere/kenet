@@ -175,6 +175,7 @@ class TestTypescript {
 
         assertEquals(
             """
+                // @ts-ignore
                 import { KenetClient } from './kenet.ts';
                 
                 export class Def extends KenetClient {
