@@ -1,11 +1,14 @@
 plugins {
-    kotlin("jvm")
+    kotlin("multiplatform")
+    `maven-publish`
 }
 
 kotlin {
+    jvm()
+
     sourceSets {
         @Suppress("UNUSED_VARIABLE")
-        val main by getting {
+        val jvmMain by getting {
             dependencies {
                 api(project(":kenet-dsl"))
                 implementation(kotlin("reflect"))
@@ -13,7 +16,7 @@ kotlin {
         }
 
         @Suppress("UNUSED_VARIABLE")
-        val test by getting {
+        val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
