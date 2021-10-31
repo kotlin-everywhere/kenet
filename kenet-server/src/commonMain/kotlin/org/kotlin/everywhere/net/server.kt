@@ -4,9 +4,21 @@ import kotlinx.serialization.json.Json
 
 class Server(private val kenet: Kenet, private val engine: ServerEngine) {
     suspend fun launch(port: Int) {
+        ensureInitialize()
+
         engine.launch(port, kenet)
     }
+
+    fun ensureInitialize() {
+        // OPT :: 친절한 오류 메시지
+        val notInitialized = kenet._endpoints.filter { !it.initialized }
+        if (notInitialized.isNotEmpty()) {
+            throw NotInitialized("초기화 하지 않은 호출지점이 있습니다. : ${notInitialized.joinToString { it.name }}")
+        }
+    }
 }
+
+class NotInitialized(message: String) : Throwable(message)
 
 operator fun <P : Any, R : Any> Call<P, R>.invoke(handler: (P) -> R) {
     this.handler = handler

@@ -69,7 +69,8 @@ abstract class Kenet {
 sealed class Endpoint(
     val kenet: Kenet,
     var name: String,
-    internal var initialized: Boolean = false,
+    // OPT :: Visibility 설정
+    var initialized: Boolean = false
 )
 
 class Call<P : Any, R : Any>(
