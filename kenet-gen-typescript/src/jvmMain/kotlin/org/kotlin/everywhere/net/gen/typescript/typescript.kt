@@ -100,12 +100,24 @@ internal fun renderType(createType: KType): String {
     }
 }
 
-fun generate(kenet: Kenet): String {
-    return (listOf("// @ts-ignore","import { KenetClient } from './kenet.ts';", "") + render(define(kenet)))
+sealed class Variant
+object TypeScript : Variant()
+object Deno : Variant()
+
+fun generate(kenet: Kenet, variant: Variant): String {
+    return (listOf(
+        when (variant) {
+            Deno ->
+                "import { KenetClient } from './kenet.ts';"
+            TypeScript ->
+                "import { KenetClient } from './kenet';"
+        },
+        ""
+    ) + render(define(kenet)))
         .joinToString("\n")
 }
 
-fun generate(kenet: Kenet, path: Path, name: String) {
+fun generate(kenet: Kenet, path: Path, name: String, variant: Variant) {
     val directory = path.toFile()
     if (!directory.exists()) {
         assert(directory.mkdirs()) { "cannot create target path : path=${path}" }
@@ -114,5 +126,5 @@ fun generate(kenet: Kenet, path: Path, name: String) {
     File(directory, "kenet.ts").writeBytes(
         object {}.javaClass.getResourceAsStream("/kenet.ts").use { it!!.readAllBytes() }
     )
-    File(directory, "$name.ts").writeText(generate(kenet))
+    File(directory, "$name.ts").writeText(generate(kenet, variant))
 }

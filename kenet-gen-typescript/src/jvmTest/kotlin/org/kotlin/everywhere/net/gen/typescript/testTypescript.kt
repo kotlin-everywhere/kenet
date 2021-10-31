@@ -175,7 +175,6 @@ class TestTypescript {
 
         assertEquals(
             """
-                // @ts-ignore
                 import { KenetClient } from './kenet.ts';
                 
                 export class Def extends KenetClient {
@@ -191,7 +190,33 @@ class TestTypescript {
                 readonly toString = this.c<number, string>('toString');
                 }
             """.trimIndent(),
-            generate(Def())
+            generate(Def(), Deno)
+        )
+    }
+
+    @Test
+    fun testImportStatement() {
+        class Def : Kenet()
+
+        assertEquals(
+            """
+                import { KenetClient } from './kenet.ts';
+                
+                export class Def extends KenetClient {
+                }
+            """.trimIndent(),
+            generate(Def(), Deno),
+            "deno 옵션일 경우 import 할때 확장자를 포함한다."
+        )
+        assertEquals(
+            """
+                import { KenetClient } from './kenet';
+                
+                export class Def extends KenetClient {
+                }
+            """.trimIndent(),
+            generate(Def(), TypeScript),
+            "ts 옵션일 경우 import 할때 확장자를 포함하지 않는다."
         )
     }
 }

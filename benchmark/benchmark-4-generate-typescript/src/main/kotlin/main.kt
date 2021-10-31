@@ -1,6 +1,7 @@
 import org.kotlin.everywhere.net.Call
 import org.kotlin.everywhere.net.Kenet
 import org.kotlin.everywhere.net.SubKenet
+import org.kotlin.everywhere.net.gen.typescript.Deno
 import org.kotlin.everywhere.net.gen.typescript.generate
 import kotlin.io.path.Path
 
@@ -8,7 +9,7 @@ fun main() {
     val initialTimes = System.currentTimeMillis()
 
     val kenet = Api()
-    generate(kenet, Path("benchmark-4-generate-typescript/dist"), "api")
+    generate(kenet, Path("benchmark-4-generate-typescript/dist"), "api", Deno)
 
     val generateTimes = System.currentTimeMillis() - initialTimes
 
