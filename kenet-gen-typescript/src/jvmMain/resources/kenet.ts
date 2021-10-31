@@ -17,6 +17,8 @@ export class KenetClient {
     return async (parameter) => {
       const response = await fetch(this.baseUrl + "/kenet", {
         headers: {"Content-Type": "application/json"},
+        method: 'POST',
+        mode: 'cors',
         body: JSON.stringify({
           subPath: this.createSubPath(),
           endpointName: endpoint,
