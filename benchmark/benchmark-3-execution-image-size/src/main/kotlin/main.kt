@@ -13,8 +13,8 @@ fun Api.init(mainScope: CoroutineScope, quitDeferred: CompletableDeferred<Unit>)
 
         log(
             "3. execution-image-size",
-            "imagePath: ${imageFile.absolutePath}",
-            "imageSize:  ${imageSize.toMb()}",
+            "imagePath: ${imageFile.absolutePath}" /* 실행 이미지 경로 */,
+            "imageSize:  ${imageSize.toMb()}"  /* 실행 이미지 용량 *,
         )
 
         logResult("3-execution-image-size", imageSize)
