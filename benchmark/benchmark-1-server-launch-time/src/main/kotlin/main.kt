@@ -5,7 +5,9 @@ import org.kotlin.everywhere.net.invoke
 
 fun Api.init(mainScope: CoroutineScope, quitDeferred: CompletableDeferred<Unit>, serverStartedAt: Milliseconds) {
     benchmark {
+        // 최초 클라이언트 통신 시각
         val launchedAt = Milliseconds(System.currentTimeMillis())
+        // 실행 시간 = 최초 클라이언트 통신 시각 - 프로그램 시작 시각
         val launchTime = launchedAt.ms - serverStartedAt.ms
 
         log(
