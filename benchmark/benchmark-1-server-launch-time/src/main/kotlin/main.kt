@@ -32,6 +32,7 @@ fun Api.init(mainScope: CoroutineScope, quitDeferred: CompletableDeferred<Unit>,
 value class Milliseconds(val ms: Long)
 
 fun main() = runBlocking {
+    // 프로그램 시작 시각
     val serverStartedAt = Milliseconds(System.currentTimeMillis())
     val serverQuitDeferred = CompletableDeferred<Unit>()
 
