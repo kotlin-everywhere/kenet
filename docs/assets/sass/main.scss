@@ -1,0 +1,305 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+/*Common*/
+button:focus {
+  border: 0;
+  outline: none !important;
+}
+.max-h-0 {
+  max-height: 0;
+}
+/*Dropdown Menu*/
+nav {
+  li.has-child {
+    position: relative;
+    padding-right: 10px;
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 4px;
+      height: 4px;
+      border-radius: 10px;
+      background-color: rgba(148, 163, 184, var(--tw-text-opacity));
+    }
+  }
+}
+.menu-item {
+  --tw-border-opacity: 1;
+  border-color: rgba(0, 0, 0, var(--tw-border-opacity));
+
+  &:hover {
+    --tw-border-opacity: 1;
+    border-color: rgba(255, 255, 255, var(--tw-border-opacity));
+  }
+
+  border-bottom-width: 4px;
+  display: inline-block;
+  padding: 1.25rem;
+}
+
+.mega-sub-item {
+  &:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgba(0, 0, 0, var(--tw-text-opacity));
+  }
+
+  cursor: pointer;
+  display: block;
+  padding: 0.5rem;
+}
+
+.mega-sub-item-title {
+  display: block;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.menu-sub-item {
+  &:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+    --tw-text-opacity: 1;
+    color: rgba(0, 0, 0, var(--tw-text-opacity));
+  }
+
+  display: block;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
+
+.group:hover {
+  .group-hover\:border-white {
+    --tw-border-opacity: 1;
+    border-color: rgba(255, 255, 255, var(--tw-border-opacity));
+  }
+
+  .group-hover\:mt-4 {
+    margin-top: 1rem;
+  }
+
+  .group-hover\:visible {
+    visibility: visible;
+  }
+
+  .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+}
+.sub-dropdown {
+  &:hover {
+    > .sub-dropdown-content {
+      opacity: 1;
+      visibility: visible;
+      top: 0;
+      left: 100%;
+      min-width: 200px;
+      margin-left: 5px;
+    }
+    > a {
+      background-color: #fff;
+    }
+  }
+}
+
+/*HEADER*/
+.sticky-bar {
+  position: relative;
+  z-index: 3;
+  &.stick {
+    -webkit-animation: 700ms ease-in-out 0s normal none 1 running fadeInDown;
+    animation: 700ms ease-in-out 0s normal none 1 running fadeInDown;
+    -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+    left: 0;
+    -webkit-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background: #fff;
+    margin-top: 0 !important;
+  }
+}
+
+.header-4.stick {
+  a.text-white {
+    color: rgba(71, 85, 105, var(--tw-text-opacity));
+  }
+  .logo-dark {
+    display: block;
+  }
+  .logo-light {
+    display: none;
+  }
+}
+
+.bg-blueGray-150 {
+  background-color: rgb(239, 243, 249);
+}
+
+/*Other*/
+.slick-arrow {
+  cursor: pointer;
+  padding: 10px;
+}
+.dot-style-1 {
+  ul {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    top: -110px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+
+    li {
+      margin: 0 3px;
+      button {
+        width: 10px;
+        height: 10px;
+        border-radius: 30px;
+        border: 1px solid;
+        padding: 0;
+        font-size: 0px;
+        border-color: #c1c1c1;
+        background: none;
+        -webkit-transition: all 0.3s linear;
+        transition: all 0.3s linear;
+        &:hover {
+          background: #c1c1c1;
+        }
+      }
+    }
+    li.slick-active {
+      button {
+        background: rgba(59, 130, 246, var(--tw-text-opacity));
+        border-color: rgba(59, 130, 246, var(--tw-text-opacity));
+      }
+    }
+  }
+}
+
+li.menu-item-has-children {
+  position: relative;
+  .menu-expand {
+    right: 0;
+    position: absolute;
+    cursor: pointer;
+    z-index: 9;
+    text-align: center;
+    font-size: 20px;
+    display: block;
+    width: 30px;
+    height: 30px;
+    line-height: 38px;
+    top: 5px;
+    color: #253d4e;
+    font-weight: 300;
+  }
+  &.active {
+    .menu-expand {
+      transform: rotate(45deg);
+    }
+  }
+}
+.min-w-200 {
+  min-width: 200px;
+}
+.hover-up-5 {
+  transition: 0.3s;
+  &:hover {
+    transform: translateY(-5px);
+    transition: 0.3s;
+  }
+}
+.hover-up-2 {
+  transition: 0.3s;
+  &:hover {
+    transform: translateY(-2px);
+    transition: 0.3s;
+  }
+}
+.card-label-center {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 70%;
+}
+#scrollUp {
+  width: 40px;
+  height: 40px;
+  line-height: 50px;
+  cursor: pointer;
+  color: #fff;
+  right: 30px;
+  bottom: 30px;
+  border-radius: 5px;
+  text-align: center;
+  overflow: hidden;
+  z-index: 999 !important;
+  background-color: #086ad8;
+  -webkit-box-shadow: 0 30px 50px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 30px 50px rgba(0, 0, 0, 0.03);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+/*page loading*/
+.preloader {
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
+  -webkit-transition: 0.6s;
+  transition: 0.6s;
+  margin: 0 auto;
+  .logo {
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    img {
+      width: 50px;
+    }
+  }
+}
+
+/*Animation*/
+@keyframes jump {
+  0% {
+    transform: translate3d(0, 15px, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.jump {
+  transform-origin: 0;
+  animation: jump 1s linear alternate infinite;
+}
