@@ -5,7 +5,7 @@
 ![kenet](https://user-images.githubusercontent.com/682021/123745117-c260c200-d8ea-11eb-88fd-1e465cd47e00.png)
 
 kenet is Kotlin Everywhere Network Framework.
-kenet is lightweitght network framework for full duplex comminucation and type safe. It is designed to make getting started quick and easy, with the ability to scale up to complex applications with kotlin. 
+kenet is lightweitght network framework for full duplex communication and type safe. It is designed to make getting started quick and easy, with the ability to scale up to complex applications with kotlin. 
 
 TODO ::  add links
 
