@@ -1,6 +1,8 @@
 # kenet
 
-![CI](https://github.com/kotlin-everywhere/kenet/actions/workflows/gradle.yml/badge.svg) [![](https://jitpack.io/v/kotlin-everywhere/kenet.svg)](https://jitpack.io/#kotlin-everywhere/kenet)
+![CI](https://github.com/kotlin-everywhere/kenet/actions/workflows/gradle.yml/badge.svg)
+[![jitpack](https://jitpack.io/v/kotlin-everywhere/kenet.svg)](https://jitpack.io/#kotlin-everywhere/kenet) 
+[![GitHub license](https://img.shields.io/github/license/kotlin-everywhere/kenet)](https://github.com/kotlin-everywhere/kenet/blob/main/LICENSE)
 
 ![kenet](https://user-images.githubusercontent.com/682021/123745117-c260c200-d8ea-11eb-88fd-1e465cd47e00.png)
 
