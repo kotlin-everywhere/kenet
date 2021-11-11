@@ -26,7 +26,7 @@ JitPack repository를 root `build.gradle` 파일의 repositories 맨아래에 �
 Dependency 추가
 ```groovy
     dependencies {
-        implementation 'com.github.kotlin-everywhere:kenet:0.1.0'
+        implementation 'com.github.kotlin-everywhere:kenet:Tag'
     }
 ```
 
@@ -45,7 +45,7 @@ Dependency 추가
     <dependency>
         <groupId>com.github.kotlin-everywhere</groupId>
         <artifactId>kenet</artifactId>
-        <version>0.1.0</version>
+        <version>Tag</version>
     </dependency>
 ```
 
