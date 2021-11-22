@@ -13,4 +13,10 @@ test-echo:
 	./gradlew installDist
 	cd test-echo && ./test.sh
 
-.PHONY: benchmark clean benchmark-loop test-echo
+docs:
+	./gradlew clean
+	./gradlew dokkaHtmlMultiModule
+	rm -rf docs
+	cp -r build/dokka/htmlMultiModule docs
+
+.PHONY: benchmark clean benchmark-loop test-echo docs
