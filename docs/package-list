@@ -1,0 +1,15 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:kenet-client
+org.kotlin.everywhere.net
+module:kenet-client-engine-http
+org.kotlin.everywhere.net
+module:kenet-dsl
+org.kotlin.everywhere.net
+module:kenet-gen-typescript
+org.kotlin.everywhere.net.gen.typescript
+module:kenet-server
+org.kotlin.everywhere.net
+module:kenet-server-engine-http
+org.kotlin.everywhere.net
