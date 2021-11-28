@@ -98,6 +98,7 @@ internal fun renderType(createType: KType): String {
     return when (createType) {
         Int::class.createType() -> "number"
         String::class.createType() -> "string"
+        Array<String>::class.createType(listOf(KTypeProjection.invariant(String::class.createType()))) -> "string[]"
         else -> {
             val kClass: KClass<*> = createType.classifier as KClass<*>
             kClass.memberProperties

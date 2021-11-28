@@ -1,6 +1,7 @@
 package org.kotlin.everywhere.net.gen.typescript
 
 import org.kotlin.everywhere.net.Kenet
+import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -157,8 +158,17 @@ class TestTypescript {
             renderType(String::class.createType())
         )
 
-        class Person(val name: String, val age: Int)
-        assertEquals("{age: number, name: string}", renderType(Person::class.createType()))
+        // Array -> []
+        assertEquals(
+            "string[]",
+            renderType(
+                Array<String>::class.createType(listOf(KTypeProjection.invariant(String::class.createType())))
+            )
+        )
+
+        // object type
+        class Person(val name: String, val age: Int, val tags: Array<String>)
+        assertEquals("{age: number, name: string, tags: string[]}", renderType(Person::class.createType()))
     }
 
     @Test
