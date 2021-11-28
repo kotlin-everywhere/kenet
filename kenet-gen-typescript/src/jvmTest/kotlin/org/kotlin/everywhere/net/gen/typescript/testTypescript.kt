@@ -158,7 +158,16 @@ class TestTypescript {
             renderType(String::class.createType())
         )
 
-        // Array -> []
+
+        // List<T> -> T[]
+        assertEquals(
+            "string[]",
+            renderType(
+                List::class.createType(listOf(KTypeProjection.covariant(String::class.createType())))
+            )
+        )
+
+        // String Array -> []
         assertEquals(
             "string[]",
             renderType(
@@ -167,7 +176,7 @@ class TestTypescript {
         )
 
         // object type
-        class Person(val name: String, val age: Int, val tags: Array<String>)
+        class Person(val name: String, val age: Int, val tags: List<String>)
         assertEquals("{age: number, name: string, tags: string[]}", renderType(Person::class.createType()))
     }
 

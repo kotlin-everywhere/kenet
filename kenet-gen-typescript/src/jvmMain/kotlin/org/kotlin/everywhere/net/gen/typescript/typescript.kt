@@ -100,6 +100,11 @@ internal fun renderType(createType: KType): String {
         String::class.createType() -> "string"
         Array<String>::class.createType(listOf(KTypeProjection.invariant(String::class.createType()))) -> "string[]"
         else -> {
+            if (createType.toString().startsWith("kotlin.collections.List<")) {
+                val listTypeArgument = createType.arguments.first().type
+                    ?: throw IllegalArgumentException("List type argument missing")
+                return renderType(listTypeArgument) + "[]"
+            }
             val kClass: KClass<*> = createType.classifier as KClass<*>
             kClass.memberProperties
                 .asSequence()
