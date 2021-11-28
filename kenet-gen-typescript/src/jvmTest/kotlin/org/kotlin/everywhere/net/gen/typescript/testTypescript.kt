@@ -156,6 +156,9 @@ class TestTypescript {
             "string",
             renderType(String::class.createType())
         )
+
+        class Person(val name: String, val age: Int)
+        assertEquals("{age: number, name: string}", renderType(Person::class.createType()))
     }
 
     @Test

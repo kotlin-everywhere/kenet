@@ -4,10 +4,12 @@ import org.kotlin.everywhere.net.Call
 import org.kotlin.everywhere.net.Kenet
 import java.io.File
 import java.nio.file.Path
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.memberProperties
 
 data class KenetDefinition(val name: String, val definitions: List<EndpointDefinition>)
 sealed class EndpointDefinition {
@@ -96,7 +98,15 @@ internal fun renderType(createType: KType): String {
     return when (createType) {
         Int::class.createType() -> "number"
         String::class.createType() -> "string"
-        else -> TODO("기타 다른 타입에 대한 처리")
+        else -> {
+            val kClass: KClass<*> = createType.classifier as KClass<*>
+            kClass.memberProperties
+                .asSequence()
+                .map { it.name to renderType(it.returnType) }
+                .sortedBy { it.first }
+                .map { "${it.first}: ${it.second}" }
+                .joinToString(", ", prefix = "{", postfix = "}")
+        }
     }
 }
 
