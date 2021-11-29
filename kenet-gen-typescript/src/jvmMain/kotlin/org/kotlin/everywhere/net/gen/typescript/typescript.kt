@@ -96,8 +96,8 @@ internal fun render(def: CallDefinition): List<String> {
 
 internal fun renderType(createType: KType): String {
     val rendered = when (createType) {
-        Int::class.createType() -> "number"
-        String::class.createType() -> "string"
+        Int::class.createType(), Int::class.createType(nullable = true) -> "number"
+        String::class.createType(), String::class.createType(nullable = true) -> "string"
         Array<String>::class.createType(listOf(KTypeProjection.invariant(String::class.createType()))) -> "string[]"
         else -> {
             if (createType.toString().startsWith("kotlin.collections.List<")) {

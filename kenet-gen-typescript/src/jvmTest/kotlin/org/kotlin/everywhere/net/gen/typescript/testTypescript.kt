@@ -152,10 +152,22 @@ class TestTypescript {
             renderType(Int::class.createType())
         )
 
+        // Int -> number
+        assertEquals(
+            "number | null",
+            renderType(Int::class.createType(nullable = true))
+        )
+
         // String -> string
         assertEquals(
             "string",
             renderType(String::class.createType())
+        )
+
+        // String? -> string | null
+        assertEquals(
+            "string | null",
+            renderType(String::class.createType(nullable = true))
         )
 
 
