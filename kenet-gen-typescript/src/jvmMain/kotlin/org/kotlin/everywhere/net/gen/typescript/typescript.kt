@@ -95,7 +95,7 @@ internal fun render(def: CallDefinition): List<String> {
 }
 
 internal fun renderType(createType: KType): String {
-    return when (createType) {
+    val rendered = when (createType) {
         Int::class.createType() -> "number"
         String::class.createType() -> "string"
         Array<String>::class.createType(listOf(KTypeProjection.invariant(String::class.createType()))) -> "string[]"
@@ -114,6 +114,7 @@ internal fun renderType(createType: KType): String {
                 .joinToString(", ", prefix = "{", postfix = "}")
         }
     }
+    return rendered + (if (createType.isMarkedNullable)  " | null" else "")
 }
 
 sealed class Variant
