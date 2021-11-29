@@ -2,6 +2,7 @@ package org.kotlin.everywhere.net
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import kotlin.properties.ReadOnlyProperty
 
@@ -96,3 +97,6 @@ data class Request(val subPath: List<String>, val endpointName: String, val para
 
 @Serializable
 data class Response(val responseJson: String)
+
+
+val dslJsonFormat = Json { encodeDefaults = true }

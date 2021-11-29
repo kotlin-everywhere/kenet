@@ -25,7 +25,7 @@ class HttpClientEngine(private val urlPrefix: String) : ClientEngine() {
             contentType(ContentType.Application.Json)
             body = createRequest(call, parameter)
         }
-        return Json.decodeFromString(call.responseSerializer, response.responseJson)
+        return dslJsonFormat.decodeFromString(call.responseSerializer, response.responseJson)
     }
 }
 
