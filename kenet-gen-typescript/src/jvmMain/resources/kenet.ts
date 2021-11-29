@@ -6,33 +6,64 @@ export class KenetClient {
   readonly endpoints: string[] = [];
   private parent?: KenetClient;
   private name: string = "";
+  private readonly blocker?: HTMLDivElement;
+  private lock = 0;
 
-  constructor(baseUrl: string = "") {
+  constructor(baseUrl: string, autoBlock: boolean = false) {
     this.baseUrl = baseUrl;
+    if (autoBlock) {
+      const blocker = document.createElement("div");
+      document.body.appendChild(blocker);
+      blocker.style.display = "none";
+      blocker.style.top = "0";
+      blocker.style.left = "0";
+      blocker.style.width = "100%";
+      blocker.style.height = "100%";
+      blocker.style.position = "fixed";
+      blocker.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+      blocker.style.cursor = "wait";
+      this.blocker = blocker;
+    }
   }
 
   protected c<P, R>(endpoint: string): Ketch<P, R> {
     this.endpoints.push(endpoint);
 
     return async (parameter) => {
-      const response = await fetch(this.baseUrl + "/kenet", {
-        headers: {"Content-Type": "application/json"},
-        method: 'POST',
-        mode: 'cors',
-        body: JSON.stringify({
-          subPath: this.createSubPath(),
-          endpointName: endpoint,
-          parameterJson: JSON.stringify(parameter),
-        }),
-      });
-      return JSON.parse((await response.json()).responseJson);
+      // block
+      this.lock++;
+      if (this.blocker) {
+        this.blocker.style.display = "block";
+      }
+
+      try {
+        const response = await fetch(this.baseUrl + "/kenet", {
+          headers: {"Content-Type": "application/json"},
+          method: "POST",
+          mode: "cors",
+          body: JSON.stringify({
+            subPath: this.createSubPath(),
+            endpointName: endpoint,
+            parameterJson: JSON.stringify(parameter),
+          }),
+        });
+        return JSON.parse((await response.json()).responseJson);
+      } finally {
+        // unblock
+        this.lock--;
+        if (!this.lock) {
+          if (this.blocker) {
+            this.blocker.style.display = "none";
+          }
+        }
+      }
     };
   }
 
   protected s<T extends KenetClient>(name: string, sub: T): T {
     sub.parent = this;
     sub.name = name;
-    this.endpoints.push(...sub.endpoints.map(x => `${name}.${x}`));
+    this.endpoints.push(...sub.endpoints.map((x) => `${name}.${x}`));
     return sub;
   }
 
