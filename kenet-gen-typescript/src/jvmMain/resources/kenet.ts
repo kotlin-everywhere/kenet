@@ -25,7 +25,7 @@ export class KenetClient {
           parameterJson: JSON.stringify(parameter),
         }),
       });
-      return response.json();
+      return JSON.parse((await response.json()).responseJson);
     };
   }
 
