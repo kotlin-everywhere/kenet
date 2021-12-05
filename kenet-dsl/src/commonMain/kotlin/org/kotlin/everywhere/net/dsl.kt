@@ -30,6 +30,14 @@ abstract class Kenet {
         { it }
     )
 
+    @PublishedApi
+    internal fun <P : Any> fire(
+        parameterSerializer: KSerializer<P>,
+    ): ReadOnlyProperty<Kenet, Fire<P>> = createEndpointProperty(
+        { anonymousName -> Fire(this, anonymousName, parameterSerializer) },
+        { it }
+    )
+
     private fun <T : Endpoint, U> createEndpointProperty(
         create: (anonymousName: String) -> T,
         mapper: (T) -> U
@@ -65,6 +73,10 @@ abstract class Kenet {
             { sub }
         )
     }
+
+    inline fun <reified P : Any> f(): ReadOnlyProperty<Kenet, Fire<P>> {
+        return fire(serializer())
+    }
 }
 
 sealed class Endpoint(
@@ -80,7 +92,16 @@ class Call<P : Any, R : Any>(
     val parameterSerializer: KSerializer<P>,
     val responseSerializer: KSerializer<R>
 ) : Endpoint(kenet, name) {
-    var handler: (P) -> R =
+    var handler: suspend (P) -> R =
+        { _ -> throw NotImplementedError("API 사용법 오류(Invalid API usage) : ${name}의 핸들러가 정의되지 않았습니다..") }
+}
+
+class Fire<P : Any>(
+    kenet: Kenet,
+    name: String,
+    val parameterSerializer: KSerializer<P>,
+) : Endpoint(kenet, name) {
+    var handler: suspend (P) -> Unit =
         { _ -> throw NotImplementedError("API 사용법 오류(Invalid API usage) : ${name}의 핸들러가 정의되지 않았습니다..") }
 }
 

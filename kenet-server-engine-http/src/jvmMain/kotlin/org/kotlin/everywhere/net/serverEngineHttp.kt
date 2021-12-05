@@ -37,11 +37,18 @@ actual class HttpServerEngine actual constructor() : ServerEngine() {
                     val endpoint = findEndpoint(kenet, request.subPath, request.endpointName)
                     // TODO :: Error 응답 리턴
                     check(endpoint != null) { "요청한 ENDPOINT 를 찾을 수 없습니다." }
-                    // TODO :: Error 응답 리턴
-                    check(endpoint is Call<*, *>) { "요청한 endpoint 는 call 을 처리할 수 없습니다." }
-
-                    val responseJson = endpoint.handle(request.parameterJson)
-                    call.respond(Response(responseJson = responseJson))
+                    when (endpoint) {
+                        is Call<*, *> -> {
+                            val responseJson = endpoint.handle(request.parameterJson)
+                            call.respond(Response(responseJson = responseJson))
+                        }
+                        is Fire<*> -> {
+                            endpoint.handle(request.parameterJson)
+                        }
+                        else -> {
+                            throw IllegalArgumentException("처리할 수 없는 요청입니다. : endpoint = $endpoint")
+                        }
+                    }
                 }
             }
         }

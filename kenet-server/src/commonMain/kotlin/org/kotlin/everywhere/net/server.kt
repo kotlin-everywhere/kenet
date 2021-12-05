@@ -1,7 +1,5 @@
 package org.kotlin.everywhere.net
 
-import kotlinx.serialization.json.Json
-
 class Server(private val kenet: Kenet, private val engine: ServerEngine) {
     suspend fun launch(port: Int) {
         ensureInitialize()
@@ -20,12 +18,23 @@ class Server(private val kenet: Kenet, private val engine: ServerEngine) {
 
 class NotInitialized(message: String) : Throwable(message)
 
-operator fun <P : Any, R : Any> Call<P, R>.invoke(handler: (P) -> R) {
+operator fun <P : Any, R : Any> Call<P, R>.invoke(handler: suspend (P) -> R) {
     this.handler = handler
 }
 
-fun <P : Any, R : Any> Call<P, R>.handle(parameterJson: String): String {
-    return dslJsonFormat.encodeToString(responseSerializer, handler(dslJsonFormat.decodeFromString(parameterSerializer, parameterJson)))
+suspend fun <P : Any, R : Any> Call<P, R>.handle(parameterJson: String): String {
+    return dslJsonFormat.encodeToString(
+        responseSerializer,
+        handler(dslJsonFormat.decodeFromString(parameterSerializer, parameterJson))
+    )
+}
+
+operator fun <P : Any> Fire<P>.invoke(handler: suspend (P) -> Unit) {
+    this.handler = handler
+}
+
+suspend fun <P : Any> Fire<P>.handle(parameterJson: String) {
+    handler(dslJsonFormat.decodeFromString(parameterSerializer, parameterJson))
 }
 
 fun createServer(api: Kenet, engine: ServerEngine): Server {

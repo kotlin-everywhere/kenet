@@ -6,6 +6,7 @@ import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 
@@ -26,6 +27,19 @@ class HttpClientEngine(private val urlPrefix: String) : ClientEngine() {
             body = createRequest(call, parameter)
         }
         return dslJsonFormat.decodeFromString(call.responseSerializer, response.responseJson)
+    }
+
+    override fun <P : Any> fire(fire: Fire<P>, parameter: P) {
+        client.launch {
+            client.post<Unit>("${urlPrefix}/kenet") {
+                contentType(ContentType.Application.Json)
+                body = Request(
+                    createSubPath(fire.kenet),
+                    fire.name,
+                    Json.encodeToString(fire.parameterSerializer, parameter)
+                )
+            }
+        }
     }
 }
 
