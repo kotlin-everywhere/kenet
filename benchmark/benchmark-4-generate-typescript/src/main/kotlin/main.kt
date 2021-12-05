@@ -1,4 +1,5 @@
 import org.kotlin.everywhere.net.Call
+import org.kotlin.everywhere.net.Fire
 import org.kotlin.everywhere.net.Kenet
 import org.kotlin.everywhere.net.SubKenet
 import org.kotlin.everywhere.net.gen.typescript.Deno
@@ -29,6 +30,7 @@ private fun sumEndpointSize(kenet: Kenet): Int {
     return kenet._endpoints.sumOf {
         when (it) {
             is Call<*, *> -> 1
+            is Fire<*> -> 1
             is SubKenet<*> -> sumEndpointSize(it.sub)
         }
     }

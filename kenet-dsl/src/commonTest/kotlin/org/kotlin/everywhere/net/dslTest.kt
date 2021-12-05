@@ -15,6 +15,7 @@ class DslTest {
 
             // 동일 이름 사용 가능 여부 확인, Kenet 사용 중인 함수명과 충돌하는지 테스트
             val anonymousEndpointIndex by c<Unit, String>()
+            val sync by c<Unit, String>()
         }
 
         val api = Api()
