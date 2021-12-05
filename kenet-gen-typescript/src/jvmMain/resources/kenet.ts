@@ -1,5 +1,6 @@
 // TODO :: json decoder 추가
 export type Ketch<P, R> = (parameter: P) => Promise<R>;
+export type Fire<P> = (parameter: P) => void;
 
 export class KenetClient {
   readonly baseUrl: string;
@@ -9,7 +10,7 @@ export class KenetClient {
   private readonly blocker?: HTMLDivElement;
   private lock = 0;
 
-  constructor(baseUrl: string, autoBlock: boolean = false) {
+  constructor(baseUrl, autoBlock: boolean = false) {
     this.baseUrl = baseUrl;
     if (autoBlock) {
       const blocker = document.createElement("div");
@@ -60,6 +61,29 @@ export class KenetClient {
     };
   }
 
+  protected f<P>(endpoint: string): Fire<P> {
+    this.endpoints.push(endpoint);
+
+    return (parameter) => {
+      fetch(this.baseUrl + "/kenet", {
+        headers: {"Content-Type": "application/json"},
+        method: "POST",
+        mode: "cors",
+        body: JSON.stringify({
+          subPath: this.createSubPath(),
+          endpointName: endpoint,
+          parameterJson: JSON.stringify(parameter),
+        }),
+      }).then((response: Response) => {
+        if (response.ok) {
+          return;
+        }
+        throw new FetchError('request failed', response);
+      })
+    };
+  }
+
+
   protected s<T extends KenetClient>(name: string, sub: T): T {
     sub.parent = this;
     sub.name = name;
@@ -72,5 +96,14 @@ export class KenetClient {
       return [];
     }
     return [...this.parent.createSubPath(), this.name];
+  }
+}
+
+class FetchError extends Error {
+  readonly response: Response;
+
+  constructor(message: string, response: Response) {
+    super(message);
+    this.response = response;
   }
 }

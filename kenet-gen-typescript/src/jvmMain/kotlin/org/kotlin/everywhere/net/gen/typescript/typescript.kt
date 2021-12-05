@@ -1,6 +1,7 @@
 package org.kotlin.everywhere.net.gen.typescript
 
 import org.kotlin.everywhere.net.Call
+import org.kotlin.everywhere.net.Fire
 import org.kotlin.everywhere.net.Kenet
 import java.io.File
 import java.nio.file.Path
@@ -19,6 +20,8 @@ sealed class EndpointDefinition {
 data class CallDefinition(override val name: String, val parameterType: KType, val responseType: KType) :
     EndpointDefinition()
 
+data class FireDefinition(override val name: String, val parameterType: KType) : EndpointDefinition()
+
 data class SubDefinition(override val name: String, val kenetDefinition: KenetDefinition) : EndpointDefinition()
 
 internal fun define(kenet: Kenet, name: String? = null): KenetDefinition {
@@ -29,43 +32,48 @@ internal fun define(kenet: Kenet, name: String? = null): KenetDefinition {
     val definitions = kenet::class
         .members
         // TODO :: reflection 제거
-        .filter {
-            it.returnType.isSubtypeOf(
-                Call::class.createType(
-                    listOf(
-                        KTypeProjection.STAR,
-                        KTypeProjection.STAR
-                    )
-                )
-            ) || it.returnType.isSubtypeOf(Kenet::class.createType())
-        }
         .map {
-            if (it.returnType.isSubtypeOf(
+            when {
+                it.returnType.isSubtypeOf(
                     Call::class.createType(
                         listOf(
                             KTypeProjection.STAR,
                             KTypeProjection.STAR
                         )
                     )
-                )
-            ) {
-                require(it.returnType.arguments.size == 2) {
-                    "invalid endpoint parameter length, it must be 2(Parameter, Response) types : parameters = ${it.returnType.arguments}"
+                ) -> {
+                    require(it.returnType.arguments.size == 2) {
+                        "invalid endpoint parameter length, it must be 2(Parameter, Response) types : parameters = ${it.returnType.arguments}"
+                    }
+                    val (parameterType, responseType) = it.returnType.arguments
+                    CallDefinition(
+                        it.name,
+                        parameterType.type
+                            ?: throw IllegalArgumentException("call endpoint parameter type missing : parameterType = $parameterType"),
+                        responseType.type
+                            ?: throw IllegalArgumentException("call endpoint response type missing : responseType = $responseType")
+                    )
                 }
-                val (parameterType, responseType) = it.returnType.arguments
-                CallDefinition(
-                    it.name,
-                    parameterType.type
-                        ?: throw IllegalArgumentException("call endpoint parameter type missing : parameterType = $parameterType"),
-                    responseType.type
-                        ?: throw IllegalArgumentException("call endpoint response type missing : responseType = $responseType")
-                )
-            } else if (it.returnType.isSubtypeOf(Kenet::class.createType())) {
-                SubDefinition(it.name, define(it.call(kenet) as Kenet, it.name))
-            } else {
-                TODO("친절한 오류 메시지")
+                it.returnType.isSubtypeOf(Fire::class.createType(listOf(KTypeProjection.STAR))) -> {
+                    require(it.returnType.arguments.size == 1) {
+                        "invalid endpoint parameter length, it must be 1(Parameter) types : parameters = ${it.returnType.arguments}"
+                    }
+                    val (parameterType) = it.returnType.arguments
+                    FireDefinition(
+                        it.name,
+                        parameterType.type
+                            ?: throw IllegalArgumentException("call endpoint parameter type missing : parameterType = $parameterType"),
+                    )
+                }
+                it.returnType.isSubtypeOf(Kenet::class.createType()) -> {
+                    SubDefinition(it.name, define(it.call(kenet) as Kenet, it.name))
+                }
+                else -> {
+                    null
+                }
             }
         }
+        .filterNotNull()
         // 리플렉션은 필드의 순서를 보장하지 않는다. 항상 동일한 결과값을 보장하기 위해서 이름 순으로 정렬한다.
         .sortedBy { it.name }
     return KenetDefinition(className, definitions)
@@ -86,12 +94,17 @@ internal fun render(def: KenetDefinition, subName: String? = null): List<String>
 internal fun render(def: EndpointDefinition): List<String> {
     return when (def) {
         is CallDefinition -> render(def)
+        is FireDefinition -> render(def)
         is SubDefinition -> render(def.kenetDefinition, def.name)
     }
 }
 
 internal fun render(def: CallDefinition): List<String> {
     return listOf("readonly ${def.name} = this.c<${renderType(def.parameterType)}, ${renderType(def.responseType)}>('${def.name}');")
+}
+
+internal fun render(def: FireDefinition): List<String> {
+    return listOf("readonly ${def.name} = this.f<${renderType(def.parameterType)}>('${def.name}');")
 }
 
 internal fun renderType(createType: KType): String {

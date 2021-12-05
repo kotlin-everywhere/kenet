@@ -19,13 +19,14 @@ class TestTypescript {
                     val echo3 by c<String, String>()
                 })
             })
+            val xAdd by f<Int>()
         }
 
         val def = Def()
         val definition = define(def)
 
         assertEquals("Def", definition.name, "Kenet 을 정의한 Class 명 확인")
-        assertEquals(3, definition.definitions.size, "정의한 endpoint 갯수 출력 확인")
+        assertEquals(4, definition.definitions.size, "정의한 endpoint 갯수 출력 확인")
 
         // 첫번째 확인
         val echo = definition.definitions[0]
@@ -63,6 +64,17 @@ class TestTypescript {
             String::class.createType(),
             toString.responseType,
             "세번째 endpoint 응답 String 타입확인"
+        )
+
+        // 네번쩨 확인
+        val xAdd = definition.definitions[3]
+        assertIs<FireDefinition>(xAdd, "xAdd 은 발화 지점이다.")
+        assertEquals("xAdd", xAdd.name, "세번째 endpoint 이름 xAdd 인것 확인")
+        assertEquals(def.xAdd.name, xAdd.name, "세번째 endpoint 이름 실제 endpoint 와 동일한지 확인")
+        assertEquals(
+            Int::class.createType(),
+            xAdd.parameterType,
+            "네번쩨 endpoint 파라미터 Int 타입확인"
         )
     }
 
@@ -145,6 +157,15 @@ class TestTypescript {
     }
 
     @Test
+    fun testRenderFireDefinition() {
+        // 호출 전체 규격 확인
+        assertEquals(
+            listOf("readonly add = this.f<number>('add');"),
+            render(FireDefinition("add", Int::class.createType()))
+        )
+    }
+
+    @Test
     fun testRenderType() {
         // Int -> number
         assertEquals(
@@ -205,6 +226,7 @@ class TestTypescript {
                     val echo3 by c<String, String>()
                 })
             })
+            val add by f<Int>()
         }
 
         assertEquals(
@@ -212,6 +234,7 @@ class TestTypescript {
                 import { KenetClient } from './kenet.ts';
                 
                 export class Def extends KenetClient {
+                readonly add = this.f<number>('add');
                 readonly echo = this.c<string, string>('echo');
                 readonly parseInt = this.c<string, number>('parseInt');
                 readonly reflect = this.c<number, number>('reflect');
