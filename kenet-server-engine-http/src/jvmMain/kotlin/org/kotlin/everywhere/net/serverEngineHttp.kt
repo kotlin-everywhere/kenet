@@ -3,13 +3,17 @@ package org.kotlin.everywhere.net
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
+import io.ktor.http.cio.websocket.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 
 
 actual class HttpServerEngine actual constructor() : ServerEngine() {
@@ -28,6 +32,8 @@ actual class HttpServerEngine actual constructor() : ServerEngine() {
                     allowCredentials = true
                     allowNonSimpleContentTypes = true
                     anyHost()
+                }
+                install(WebSockets) {
                 }
             }
 
@@ -50,6 +56,12 @@ actual class HttpServerEngine actual constructor() : ServerEngine() {
                         }
                     }
                 }
+
+                kenet._pipes.forEach { pipe ->
+                    webSocket("/kenet-ws/${pipe.name}") {
+                        pipe.handle(this)
+                    }
+                }
             }
         }
         es.start()
@@ -57,5 +69,39 @@ actual class HttpServerEngine actual constructor() : ServerEngine() {
         // TODO :: 정상적으로 기다리는 방벙 연구
         val deferred = CompletableDeferred<Unit>()
         deferred.await()
+    }
+
+    private suspend fun <S : Any, C : Any> Pipe<S, C>.handle(ws: DefaultWebSocketSession) {
+        val sender = Channel<S>()
+        val senderJob = ws.launch {
+            for (serverMsg in sender) {
+                ws.send(dslJsonFormat.encodeToString(serverMessageSerializer, serverMsg))
+            }
+        }
+
+        val receiver = Channel<C>()
+        val receiverJob = ws.launch {
+            for (clientMsgFrame in ws.incoming) {
+                when (clientMsgFrame) {
+                    is Frame.Text -> {
+                        val clientMsg =
+                            dslJsonFormat.decodeFromString(clientMessageSerializer, clientMsgFrame.readText())
+                        receiver.send(clientMsg)
+                    }
+                    is Frame.Close -> {
+                        sender.close()
+                        receiver.close()
+                    }
+                    else -> {
+                        throw IllegalArgumentException("cannot handle some data : frame = $clientMsgFrame")
+                    }
+                }
+            }
+        }
+
+        // TODO :: Safe way handle this
+        serverHandler!!.invoke(ws, sender, receiver)
+        senderJob.cancel()
+        receiverJob.cancel()
     }
 }

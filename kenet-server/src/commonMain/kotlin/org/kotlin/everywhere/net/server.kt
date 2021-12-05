@@ -1,5 +1,9 @@
 package org.kotlin.everywhere.net
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
+
 class Server(private val kenet: Kenet, private val engine: ServerEngine) {
     suspend fun launch(port: Int) {
         ensureInitialize()
@@ -9,9 +13,14 @@ class Server(private val kenet: Kenet, private val engine: ServerEngine) {
 
     fun ensureInitialize() {
         // OPT :: 친절한 오류 메시지
-        val notInitialized = kenet._endpoints.filter { !it.initialized }
-        if (notInitialized.isNotEmpty()) {
-            throw NotInitialized("초기화 하지 않은 호출지점이 있습니다. : ${notInitialized.joinToString { it.name }}")
+        val notInitializedEndpoints = kenet._endpoints.filter { !it.initialized }
+        if (notInitializedEndpoints.isNotEmpty()) {
+            throw NotInitialized("초기화 하지 않은 호출지점이 있습니다. : ${notInitializedEndpoints.joinToString { it.name }}")
+        }
+
+        val notInitializedPipes = kenet._pipes.filter { !it.initialized }
+        if (notInitializedPipes.isNotEmpty()) {
+            throw NotInitialized("초기화 하지 않은 파이프가 있습니다. : ${notInitializedPipes.joinToString { it.name }}")
         }
     }
 }
@@ -35,6 +44,10 @@ operator fun <P : Any> Fire<P>.invoke(handler: suspend (P) -> Unit) {
 
 suspend fun <P : Any> Fire<P>.handle(parameterJson: String) {
     handler(dslJsonFormat.decodeFromString(parameterSerializer, parameterJson))
+}
+
+operator fun <S : Any, C : Any> Pipe<S, C>.invoke(serverHandler: suspend CoroutineScope.(send: SendChannel<S>, receive: ReceiveChannel<C>) -> Unit) {
+    this.serverHandler = serverHandler
 }
 
 fun createServer(api: Kenet, engine: ServerEngine): Server {

@@ -1,12 +1,29 @@
 package org.kotlin.everywhere.net.test.integration
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.kotlin.everywhere.net.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+
+@Serializable
+sealed class ServerMsg {
+    @Serializable
+    @SerialName("Ping")
+    class Ping(val no: Int) : ServerMsg()
+}
+
+@Serializable
+sealed class ClientMsg {
+    @Serializable
+    @SerialName("Pong")
+    class Pong(val no: Int) : ClientMsg()
+}
 
 class JvmEchoTest {
     @Test
@@ -19,14 +36,26 @@ class JvmEchoTest {
             val echo by c<String, String>()
             val sub by c(SubApi())
             val addMessage by f<String>()
+            val pipe by p<ServerMsg, ClientMsg>()
         }
 
         val messages = mutableListOf<String>()
+        var pongReceived = false
         fun Api.init() {
             echo(handler = { it })
             sub.echo2(handler = { it })
             addMessage(handler = {
                 messages.add(it)
+            })
+            pipe(serverHandler = { send, receive ->
+                send.send(ServerMsg.Ping(1))
+                for (clientMsg in receive) {
+                    when (clientMsg) {
+                        is ClientMsg.Pong -> {
+                            pongReceived = true
+                        }
+                    }
+                }
             })
         }
 
@@ -41,16 +70,19 @@ class JvmEchoTest {
         val echo = client.kenet.echo.invoke("hello, world!")
         assertEquals("hello, world!", echo)
 
-//         TODO :: client 전달 및 이름 정의 추가
-        val echo2 = client.kenet.sub.echo2.invoke("hello, 2 world!")
-        assertEquals("hello, 2 world!", echo2)
+        // Ping Pong 테스트
+        val deferred = CompletableDeferred<Unit>()
+        client.kenet.pipe.invoke(clientHandler = { sender, receiver ->
+            when (val serverMsg = receiver.receive()) {
+                is ServerMsg.Ping -> {
+                    sender.send(ClientMsg.Pong(serverMsg.no))
+                }
+            }
+            deferred.complete(Unit)
+        })
 
-        // 오출하기 전에는 빈 List
-        assertEquals(listOf(), messages)
-        client.kenet.addMessage.invoke("first")
-        delay(1_000)
-        assertEquals(listOf("first"), messages, "Fire 는 호출 시첨을 알 수 없기 때문에 일단 기다려 봤으나, message 가 들어오지 않았다.")
-
+        deferred.await()
+        assertEquals(true, pongReceived)
 
         serverJob.cancelAndJoin()
         delay(1000)

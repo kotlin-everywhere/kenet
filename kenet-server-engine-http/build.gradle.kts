@@ -15,6 +15,7 @@ kotlin {
                 val ktor_version = "1.6.0"
                 implementation("io.ktor:ktor-server-cio:$ktor_version")
                 implementation("io.ktor:ktor-serialization:$ktor_version")
+                implementation("io.ktor:ktor-websockets:$ktor_version")
             }
         }
 

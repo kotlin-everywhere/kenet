@@ -1,5 +1,8 @@
 package org.kotlin.everywhere.net
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -8,6 +11,7 @@ import kotlin.properties.ReadOnlyProperty
 
 abstract class Kenet {
     val _endpoints = mutableListOf<Endpoint>()
+    val _pipes = mutableListOf<Pipe<*, *>>()
     var _client: KenetClient? = null
     var _parent: Kenet? = null
     var _name: String = ""
@@ -16,6 +20,7 @@ abstract class Kenet {
      * 최초 생성시 이름 지정용 인덱스, 그냥 이름 자리에 null 이 들어가는게 싫다.
      */
     private var anonymousEndpointIndex = 0
+    private var anonymousPipeIndex = 0
 
     private fun newEndpointName(): String {
         return "anonymousEndpoint#${anonymousEndpointIndex++}"
@@ -37,6 +42,28 @@ abstract class Kenet {
         { anonymousName -> Fire(this, anonymousName, parameterSerializer) },
         { it }
     )
+
+    @PublishedApi
+    internal fun <S : Any, C : Any> pipe(
+        serverMessageSerializer: KSerializer<S>,
+        clientMessageSerializer: KSerializer<C>
+    ): ReadOnlyProperty<Kenet, Pipe<S, C>> {
+        val anonymousName = "anonymousPipe#${anonymousEndpointIndex++}"
+        val pipe: Pipe<S, C> =
+            Pipe(this, anonymousName, serverMessageSerializer, clientMessageSerializer)
+        _pipes.add(pipe)
+        return ReadOnlyProperty { thisRef, property ->
+            if (pipe.initialized) {
+                if (pipe.name != property.name) {
+                    throw IllegalArgumentException("잘못된 PIPE 사용, 한번 초기화된 파이프가 다른곳에서 사용되었다.")
+                }
+            } else {
+                pipe.name = property.name
+                pipe.initialized = true
+            }
+            pipe
+        }
+    }
 
     private fun <T : Endpoint, U> createEndpointProperty(
         create: (anonymousName: String) -> T,
@@ -77,6 +104,10 @@ abstract class Kenet {
     inline fun <reified P : Any> f(): ReadOnlyProperty<Kenet, Fire<P>> {
         return fire(serializer())
     }
+
+    inline fun <reified S : Any, reified C : Any> p(): ReadOnlyProperty<Kenet, Pipe<S, C>> {
+        return pipe(serializer(), serializer())
+    }
 }
 
 sealed class Endpoint(
@@ -110,6 +141,15 @@ class SubKenet<T : Kenet>(
     name: String,
     val sub: T
 ) : Endpoint(kenet, name)
+
+class Pipe<S : Any, C : Any>(
+    val kenet: Kenet,
+    var name: String,
+    val serverMessageSerializer: KSerializer<S>,
+    val clientMessageSerializer: KSerializer<C>,
+    var initialized: Boolean = false,
+    var serverHandler: (suspend CoroutineScope.(send: SendChannel<S>, receive: ReceiveChannel<C>) -> Unit)? = null
+)
 
 interface KenetClient
 
